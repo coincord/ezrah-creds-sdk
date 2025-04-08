@@ -52,3 +52,47 @@ export const RESOLVEDID = gql`
     }
   }
 `;
+
+// TEMPLATES
+export const TEMPLATES = gql`
+  query Templates {
+    templates {
+      id
+      title
+      claimStructure
+      description
+      created_at
+    }
+  }
+`;
+
+// VERIFICATION MODELS
+export const VERIFICATIONMODELS = gql`
+  query VerificationModel {
+    verifications_models {
+      id
+      title
+      verification_title
+      purpose
+      verification_link
+      manual_verification
+      issuer_match
+      claims_match
+      created_at
+    }
+  }
+`;
+
+// VERIFICATION REQUESTS
+export const VERIFICATIONREQUESTS = gql`
+  query VerificationRequests($verification_model: String!) {
+    verification_requests(verification_model: $verification_model) {
+      id
+      status
+      created_at
+      presentation
+      issuer_match
+      claims_match
+    }
+  }
+`;
