@@ -85,3 +85,28 @@ export const DELETECREDENTIALWEBHOOK = gql`
     deleteCredentialWebhook(webhook_id: $webhook_id)
   }
 `
+
+// ORGANIZATION API KEYS
+
+export const ADDORGANIZATIONAPIKEY = gql`
+  mutation AddOrganization($title: String!) {
+    addOrganizationApiKey(title: $title) {
+      id
+      api_key
+      title
+      created_at
+    }
+  }
+`;
+
+export const DELETEORGANIZATIONAPIKEY = gql`
+  mutation DeleteOrganizationApiKey($id: String!) {
+    deleteOrganizationApiKey(id: $id)
+  }
+`;
+
+export const UPLOADORGANIZATIONIMAGE = gql`
+  mutation UploadOrganizationImage($file: Upload!) {
+    uploadOrganizationImage(file: $file)
+  }
+`;
