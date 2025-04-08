@@ -13,4 +13,6 @@ class EzrahCredential {
   public getClient(): GraphQLClient {
     return this.client;
   }
+
+  
 }
