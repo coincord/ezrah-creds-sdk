@@ -96,3 +96,51 @@ export const VERIFICATIONREQUESTS = gql`
     }
   }
 `;
+
+//APIKEYs
+export const APIKEYS = gql`
+  query ApiKeys {
+    api_keys {
+      id
+      api_key
+      title
+      created_at
+    }
+  }
+`;
+
+// ORGANIZATION
+export const ORGANIZATION = gql`
+  query Organization {
+    organization {
+      id
+      name
+      domain
+      alias
+      logo
+      identifier {
+        id
+        did
+        created_at
+      }
+      api_key
+      api_keys {
+        id
+        api_key
+        title
+        created_at
+      }
+    }
+  }
+`;
+
+// CREDENTIAL WEBHOOK
+export const CREDENTIALWEBHOOKS = gql`
+  query CredentialWebhooks {
+    credential_webhooks {
+      id
+      name
+      webhook_url
+    }
+  }
+`;
