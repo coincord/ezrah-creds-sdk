@@ -1,6 +1,12 @@
 declare global {
 
   // CREDENTIALS
+  interface Identifier {
+    id: string;
+    did: string;
+    created_at: string | Date;
+  }
+
   interface CreateCredential {
     claimID: string;
     did: string;
@@ -78,7 +84,7 @@ declare global {
 
   interface ResolvedDID {
     did: string;
-    resolvedDID: string;
+    resolvedDID: Record<string, string>;
   }
 
   // VERIFICATION MODELS & REQUESTS
@@ -136,6 +142,16 @@ declare global {
     created_at: string
   }
 
+  export interface CredentialWebHook {
+    id: string;
+    name: string;
+    webhook_url: string;
+  }
+  
+  export interface CredentialWebhookListings {
+    credential_webhooks: CredentialWebHook[];
+  }
+
   interface UpdateCredentialWebhook {
     webhook_id: string;
     request_key: string;
@@ -172,12 +188,13 @@ declare global {
     logo: string;
     identifier: Identifier;
     api_key: string;
-    api_keys: OrganizationApiKey[];
+    api_keys: OrganizationApiKeyResponse[];
   }
 
   interface OrganizationDetails {
     organization: Organization;
   }
+
 }
 
 

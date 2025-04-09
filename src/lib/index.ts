@@ -15,6 +15,7 @@ import {
 import { 
   APIKEYS,
   CREDENTIALANALYTICS, 
+  CREDENTIALWEBHOOKS, 
   ISSUEDCREDENTIALS, 
   ORGANIZATION, 
   RESOLVEDID, TEMPLATES, VERIFICATIONMODELS, VERIFICATIONREQUESTS } from "./query";
@@ -312,6 +313,22 @@ class EzrahCredential {
       }
 
       return response.data as OrganizationDetails;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async webhooks(): Promise<CredentialWebhookListings | null> {
+
+    try {
+      
+      const response: GraphQLResponse = await graphqlClient.request(CREDENTIALWEBHOOKS);
+
+      if(!response?.data) {
+        throw new Error("Error occured while fetching webhooks");
+      }
+      
+      return response.data as CredentialWebhookListings;
     } catch (error) {
       throw error;
     }
