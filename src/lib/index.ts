@@ -65,7 +65,7 @@ class EzrahCredential {
     }
   }
 
-  static async createVerificationModel (params: CreateVerificationModel): Promise<VerificationModelResponse | null> {
+  static async createVerificationModel (params: CreateVerificationModel): Promise<CreateVerificationModelRes | null> {
     try {
       const response: GraphQLResponse  = await graphqlClient.request(CREATEVERIFICATIONMODEL, {
         title: params.title,
@@ -77,7 +77,7 @@ class EzrahCredential {
       if (!response?.data) {
         throw new Error("Error occurs while creating verification model");
       }
-      return response.data as VerificationModelResponse;
+      return response.data as CreateVerificationModelRes;
     } catch (error) {
       throw error;
     }
@@ -327,7 +327,7 @@ class EzrahCredential {
       if(!response?.data) {
         throw new Error("Error occured while fetching webhooks");
       }
-      
+
       return response.data as CredentialWebhookListings;
     } catch (error) {
       throw error;

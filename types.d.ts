@@ -56,8 +56,10 @@ declare global {
   }
 
   interface CredentialSDKResponse {
-    url: string;
-    pending_id: string;
+    createCredentialSDK: {
+      url: string;
+      pending_id: string;
+    }
   }
 
   interface CredentialAnalytics {
@@ -97,7 +99,7 @@ declare global {
     manual_verification: boolean;
   }
 
-  interface VerificationModelResponse {
+  interface VerificationModel {
     id: string;
     title: string;
     purpose: string;
@@ -109,8 +111,12 @@ declare global {
     created_at: string;
   }
 
+  export interface CreateVerificationModelRes {
+    createVerificationModel: VerificationModel;
+  } 
+
   interface VerificationModelListing {
-    verifications_models: VerificationModelResponse[];
+    verifications_models: VerificationModel[];
   }
 
   interface VerificationRequest {
