@@ -1,4 +1,6 @@
 declare global {
+
+  // CREDENTIALS
   interface CreateCredential {
     claimID: string;
     did: string;
@@ -47,12 +49,21 @@ declare global {
     claims: JSON;
   }
 
-  interface CreateCredentialSDKResponse {
+  interface CredentialSDKResponse {
     url: string;
     pending_id: string;
   }
 
+  interface CredentialAnalytics {
+    credentials_analytics: {
+      ISSUED: number;
+      CLAIMED: number;
+      REVOKED: number;
+      EXPIRED: number;
+    };
+  }
 
+  // TEMPLATEs
   interface Templates {
     id: string;
     title: string;
@@ -61,10 +72,16 @@ declare global {
     created_at: string;
   }
 
+  interface TemplateListing {
+    templates: Templates[];
+  }
+
   interface ResolvedDID {
     did: string;
     resolvedDID: string;
   }
+
+  // VERIFICATION MODELS & REQUESTS
 
   interface CreateVerificationModel {
     title: string;
@@ -74,7 +91,7 @@ declare global {
     manual_verification: boolean;
   }
 
-  interface CreateVerificationModelResponse {
+  interface VerificationModelResponse {
     id: string;
     title: string;
     purpose: string;
@@ -86,13 +103,29 @@ declare global {
     created_at: string;
   }
 
+  interface VerificationModelListing {
+    verifications_models: VerificationModelResponse[];
+  }
+
+  interface VerificationRequest {
+    id: string;
+    status: string;
+    presentation: string;
+    issuer_match: string;
+    claims_match: string;
+  }
+  
+  interface VerificationRequestListing {
+    verification_requests: VerificationRequest[];
+  }
+
   interface CreateCredentialsWebhook {
     request_key: string;
     name: string;
     webhook_url: string;
   }
 
-  interface CreateCredentialsWebhookResponse {
+  interface CredentialsWebhookResponse {
     id: string
     name: string
     request_key: string

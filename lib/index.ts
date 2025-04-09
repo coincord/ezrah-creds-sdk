@@ -1,8 +1,10 @@
 require("dotenv").config();
 import { GraphQLClient, GraphQLResponse } from "graphql-request";
 import graphqlClient from "./requester";
-import { ADDCREDENTIALSWEBHOOK, ADDORGANIZATIONAPIKEY, CREATECREDENTIALS, CREATECREDENTIALSDK, CREATEVERIFICATIONMODEL, DELETECREDENTIALWEBHOOK, DELETEORGANIZATIONAPIKEY, UPDATECREDENTIALWEBHOOK, UPLOADORGANIZATIONIMAGE } from "./mutation";
-import { ISSUEDCREDENTIALS, RESOLVEDID, TEMPLATES } from "./query";
+import { 
+  ADDCREDENTIALSWEBHOOK, 
+  ADDORGANIZATIONAPIKEY, CREATECREDENTIALS, CREATECREDENTIALSDK, CREATEVERIFICATIONMODEL, DELETECREDENTIALWEBHOOK, DELETEORGANIZATIONAPIKEY, UPDATECREDENTIALWEBHOOK, UPLOADORGANIZATIONIMAGE } from "./mutation";
+import { CREDENTIALANALYTICS, ISSUEDCREDENTIALS, RESOLVEDID, TEMPLATES, VERIFICATIONMODELS, VERIFICATIONREQUESTS } from "./query";
 
 
 class EzrahCredential {
@@ -33,7 +35,7 @@ class EzrahCredential {
     }
   }
 
-  static async issueCredentialSDK (params: CreateCredentialSDK): Promise<CreateCredentialSDKResponse | null> {
+  static async issueCredentialSDK (params: CreateCredentialSDK): Promise<CredentialSDKResponse | null> {
     try {
       const response: GraphQLResponse  = await graphqlClient.request(CREATECREDENTIALSDK, {
         title: params.title,
@@ -43,13 +45,13 @@ class EzrahCredential {
       if (!response?.data) {
         throw new Error("Error occurs while issuing credential");
       }
-      return response.data as CreateCredentialSDKResponse;
+      return response.data as CredentialSDKResponse;
     } catch (error) {
       throw error;
     }
   }
 
-  static async createVerificationModel (params: CreateVerificationModel): Promise<CreateVerificationModelResponse | null> {
+  static async createVerificationModel (params: CreateVerificationModel): Promise<VerificationModelResponse | null> {
     try {
       const response: GraphQLResponse  = await graphqlClient.request(CREATEVERIFICATIONMODEL, {
         title: params.title,
@@ -61,13 +63,13 @@ class EzrahCredential {
       if (!response?.data) {
         throw new Error("Error occurs while creating verification model");
       }
-      return response.data as CreateVerificationModelResponse;
+      return response.data as VerificationModelResponse;
     } catch (error) {
       throw error;
     }
   }
 
-  static async addCredentialsWebhook (params: CreateCredentialsWebhook): Promise<CreateCredentialsWebhookResponse | null> {
+  static async addCredentialsWebhook (params: CreateCredentialsWebhook): Promise<CredentialsWebhookResponse | null> {
 
     try {
       const response: GraphQLResponse  = await graphqlClient.request(ADDCREDENTIALSWEBHOOK, {
@@ -80,13 +82,13 @@ class EzrahCredential {
         throw new Error("Error occurs while adding credentials webhook");
       }
 
-      return response.data as CreateCredentialsWebhookResponse;
+      return response.data as CredentialsWebhookResponse;
     } catch (error) {
       throw error;
     }
   }
 
-  static async updateCredentialWebhook (params: UpdateCredentialWebhook): Promise<CreateCredentialsWebhookResponse | null> {
+  static async updateCredentialWebhook (params: UpdateCredentialWebhook): Promise<CredentialsWebhookResponse | null> {
     try {
       const response: GraphQLResponse  = await graphqlClient.request(UPDATECREDENTIALWEBHOOK, {
         webhook_id: params.webhook_id,
@@ -99,7 +101,7 @@ class EzrahCredential {
         throw new Error("Error occurs while updating credentials webhook");
       }
 
-      return response.data as CreateCredentialsWebhookResponse;
+      return response.data as CredentialsWebhookResponse;
     } catch (error) {
       throw error;
     }
@@ -193,7 +195,23 @@ class EzrahCredential {
     }
   }
 
-  static async templates (): Promise<Templates | null> {
+  static async credentialAnalytics(): Promise<CredentialAnalytics | null> {
+
+    try {
+      const response: GraphQLResponse = await graphqlClient.request(CREDENTIALANALYTICS);
+
+      if  (!response?.data) {
+         throw new Error('Error occured while getting credentials analytics')
+      }
+
+      return response.data as CredentialAnalytics;
+
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async templates(): Promise<TemplateListing | null> {
 
     try {
       const response : GraphQLResponse = await graphqlClient.request(TEMPLATES);
@@ -202,13 +220,13 @@ class EzrahCredential {
         throw new Error('Error occurs while feyching templates')
       }
 
-      return response.data as Templates;
+      return response.data as TemplateListing;
     } catch (error) {
       throw error;
     }
   }
   
-  static async resolveDID (params: string): Promise<ResolvedDID | null> {
+  static async resolveDID(params: string): Promise<ResolvedDID | null> {
     try {
       const response: GraphQLResponse = await graphqlClient.request(RESOLVEDID, {
         did: params
@@ -217,6 +235,35 @@ class EzrahCredential {
       if (!response.data) {
         throw new Error('Error occurred while resolving DID')
       }
+
+      return response.data as ResolvedDID;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async verifcationModel(): Promise<VerificationModelListing | null> {
+
+    try {
+      const response: GraphQLResponse = await graphqlClient.request(VERIFICATIONMODELS);
+
+      if (!response?.data) {
+        throw new Error('Error occured while fetching verifcation models');
+      }
+
+      return response.data as VerificationModelListing;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async verifcationRequests(params: string): Promise<VerificationRequestListing | null> {
+
+    try {
+      
+      const response: GraphQLResponse = await graphqlClient.request(VERIFICATIONREQUESTS, {
+        this.verifcationModel
+      })
     } catch (error) {
       throw error;
     }
