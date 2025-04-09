@@ -3,8 +3,19 @@ import { GraphQLClient, GraphQLResponse } from "graphql-request";
 import graphqlClient from "./requester";
 import { 
   ADDCREDENTIALSWEBHOOK, 
-  ADDORGANIZATIONAPIKEY, CREATECREDENTIALS, CREATECREDENTIALSDK, CREATEVERIFICATIONMODEL, DELETECREDENTIALWEBHOOK, DELETEORGANIZATIONAPIKEY, UPDATECREDENTIALWEBHOOK, UPLOADORGANIZATIONIMAGE } from "./mutation";
-import { CREDENTIALANALYTICS, ISSUEDCREDENTIALS, RESOLVEDID, TEMPLATES, VERIFICATIONMODELS, VERIFICATIONREQUESTS } from "./query";
+  ADDORGANIZATIONAPIKEY, 
+  CREATECREDENTIALS, 
+  CREATECREDENTIALSDK, 
+  CREATEVERIFICATIONMODEL, 
+  DELETECREDENTIALWEBHOOK, 
+  DELETEORGANIZATIONAPIKEY, 
+  UPDATECREDENTIALWEBHOOK, 
+  UPLOADORGANIZATIONIMAGE 
+} from "./mutation";
+import { 
+  CREDENTIALANALYTICS, 
+  ISSUEDCREDENTIALS, 
+  RESOLVEDID, TEMPLATES, VERIFICATIONMODELS, VERIFICATIONREQUESTS } from "./query";
 
 
 class EzrahCredential {
@@ -262,12 +273,20 @@ class EzrahCredential {
     try {
       
       const response: GraphQLResponse = await graphqlClient.request(VERIFICATIONREQUESTS, {
-        this.verifcationModel
-      })
+        verifcation_model: params
+      });
+
+      if (!response.data) {
+        throw new Error("Error occured while fetching verifcation requests");
+      }
+
+      return response.data as VerificationRequestListing;
     } catch (error) {
       throw error;
     }
   }
+
+
 }
 
 export default EzrahCredential;
