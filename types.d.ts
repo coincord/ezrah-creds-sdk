@@ -119,6 +119,8 @@ declare global {
     verification_requests: VerificationRequest[];
   }
 
+  // WEBOOKS
+
   interface CreateCredentialsWebhook {
     request_key: string;
     name: string;
@@ -151,11 +153,30 @@ declare global {
     title: string;
   }
 
-  interface AddOrganizationApiKeyResponse {
+  interface OrganizationApiKeyResponse {
     id: string;
     title: string;
     api_key: string;
     created_at: string;
+  }
+
+  interface OrganizationApiKeyListing {
+    organizationApiKey: OrganizationApiKeyResponse[];
+  }
+
+  interface Organization {
+    id: string;
+    name: string;
+    domain: string;
+    alias: string;
+    logo: string;
+    identifier: Identifier;
+    api_key: string;
+    api_keys: OrganizationApiKey[];
+  }
+
+  interface OrganizationDetails {
+    organization: Organization;
   }
 }
 

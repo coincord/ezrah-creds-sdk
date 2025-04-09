@@ -13,8 +13,10 @@ import {
   UPLOADORGANIZATIONIMAGE 
 } from "./mutation";
 import { 
+  APIKEYS,
   CREDENTIALANALYTICS, 
   ISSUEDCREDENTIALS, 
+  ORGANIZATION, 
   RESOLVEDID, TEMPLATES, VERIFICATIONMODELS, VERIFICATIONREQUESTS } from "./query";
 
 
@@ -134,7 +136,7 @@ class EzrahCredential {
     }
   }
 
-  static async addOrganizationApiKey (params: string): Promise<AddOrganizationApiKeyResponse | null> {
+  static async addOrganizationApiKey (params: string): Promise<OrganizationApiKeyResponse | null> {
     try {
       const response: GraphQLResponse  = await graphqlClient.request(ADDORGANIZATIONAPIKEY, {
         title: params
@@ -144,7 +146,7 @@ class EzrahCredential {
         throw new Error("Error occurs while adding organization api key");
       }
 
-      return response.data as AddOrganizationApiKeyResponse;
+      return response.data as OrganizationApiKeyResponse;
     } catch (error) {
       throw error;
     }
@@ -286,6 +288,34 @@ class EzrahCredential {
     }
   }
 
+  static async apiKeys(): Promise<OrganizationApiKeyResponse | null> {
+    try {
+      
+      const response: GraphQLResponse = await graphqlClient.request(APIKEYS);
+
+      if(!response.data) {
+        throw new Error("Error occured while fetching api keys");
+      }
+      return response.data as OrganizationApiKeyResponse;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async organization(): Promise<OrganizationDetails | null> {
+
+    try {
+      const response: GraphQLResponse = await graphqlClient.request(ORGANIZATION);
+
+      if (!response.data) {
+        throw new Error("Error occured while fetching organization details");
+      }
+
+      return response.data as OrganizationDetails;
+    } catch (error) {
+      throw error;
+    }
+  }
 
 }
 
