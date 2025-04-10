@@ -5,7 +5,7 @@ const graphqlClient = new GraphQLClient(`https://${process.env.EZRAH_CREDENTIAL_
   headers: {
     "Content-Type": "application/json",
     "Accept": "application/json",
-    "Organization-ApiKey": <string>process.env.EZRAH_ORGANIZATION_API_KEY
+    "access-key": <string>process.env.EZRAH_ORGANIZATION_API_KEY
   },
 });
 
