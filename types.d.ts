@@ -52,7 +52,7 @@ declare global {
   interface CreateCredentialSDK {
     title: string;
     template_claim_id: string;
-    claims: JSON;
+    claims:  Record<string, string>;
   }
 
   interface CredentialSDKResponse {
@@ -140,12 +140,14 @@ declare global {
   }
 
   interface CredentialsWebhookResponse {
-    id: string
-    name: string
-    request_key: string
-    webhook_url: string
-    last_used: string
-    created_at: string
+    addCredentialsWebhook: {
+      id: string
+      name: string
+      request_key: string
+      webhook_url: string
+      last_used: string
+      created_at: string
+    }
   }
 
   export interface CredentialWebHook {
@@ -166,9 +168,11 @@ declare global {
   }
 
   interface UpdateCredentialWebhookResponse {
-    id: string
-    name: string
-    webhook_url: string
+    updateCredentialWebhook: {
+      id: string;
+      name: string;
+      webhook_url: string;
+    }
   }
 
   interface AddOrganizationApiKey {

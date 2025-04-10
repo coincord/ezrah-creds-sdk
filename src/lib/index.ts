@@ -32,7 +32,7 @@ class EzrahCredential {
     return this.client;
   }
 
-  static async issueCredential (params: CreateCredential): Promise<VCredential | null> {
+  async issueCredential (params: CreateCredential): Promise<VCredential | null> {
     
     try {
       const response: GraphQLResponse  = await graphqlClient.request(CREATECREDENTIALS, {
@@ -49,7 +49,7 @@ class EzrahCredential {
     }
   }
 
-  static async issueCredentialSDK (params: CreateCredentialSDK): Promise<CredentialSDKResponse | null> {
+  async issueCredentialSDK (params: CreateCredentialSDK): Promise<CredentialSDKResponse | null> {
     try {
       const response: GraphQLResponse  = await graphqlClient.request(CREATECREDENTIALSDK, {
         title: params.title,
@@ -65,7 +65,7 @@ class EzrahCredential {
     }
   }
 
-  static async createVerificationModel (params: CreateVerificationModel): Promise<CreateVerificationModelRes | null> {
+  async createVerificationModel (params: CreateVerificationModel): Promise<CreateVerificationModelRes | null> {
     try {
       const response: GraphQLResponse  = await graphqlClient.request(CREATEVERIFICATIONMODEL, {
         title: params.title,
@@ -83,7 +83,7 @@ class EzrahCredential {
     }
   }
 
-  static async addCredentialsWebhook (params: CreateCredentialsWebhook): Promise<CredentialsWebhookResponse | null> {
+  async addCredentialsWebhook (params: CreateCredentialsWebhook): Promise<CredentialsWebhookResponse | null> {
 
     try {
       const response: GraphQLResponse  = await graphqlClient.request(ADDCREDENTIALSWEBHOOK, {
@@ -102,7 +102,7 @@ class EzrahCredential {
     }
   }
 
-  static async updateCredentialWebhook (params: UpdateCredentialWebhook): Promise<CredentialsWebhookResponse | null> {
+  async updateCredentialWebhook (params: UpdateCredentialWebhook): Promise<UpdateCredentialWebhookResponse | null> {
     try {
       const response: GraphQLResponse  = await graphqlClient.request(UPDATECREDENTIALWEBHOOK, {
         webhook_id: params.webhook_id,
@@ -115,13 +115,13 @@ class EzrahCredential {
         throw new Error("Error occurs while updating credentials webhook");
       }
 
-      return response.data as CredentialsWebhookResponse;
+      return response.data as UpdateCredentialWebhookResponse;
     } catch (error) {
       throw error;
     }
   }
 
-  static async deleteCredentialWebhook (params: string) {
+  async deleteCredentialWebhook (params: string) {
     try {
       const response: GraphQLResponse  = await graphqlClient.request(DELETECREDENTIALWEBHOOK, {
         webhook_id: params
@@ -137,7 +137,7 @@ class EzrahCredential {
     }
   }
 
-  static async addOrganizationApiKey (params: string): Promise<OrganizationApiKeyResponse | null> {
+  async addOrganizationApiKey (params: string): Promise<OrganizationApiKeyResponse | null> {
     try {
       const response: GraphQLResponse  = await graphqlClient.request(ADDORGANIZATIONAPIKEY, {
         title: params
@@ -153,7 +153,7 @@ class EzrahCredential {
     }
   }
 
-  static async deleteOrganizationApiKey (params: string) {
+  async deleteOrganizationApiKey (params: string) {
     try {
       const response: GraphQLResponse  = await graphqlClient.request(DELETEORGANIZATIONAPIKEY, {
         id: params
@@ -169,7 +169,7 @@ class EzrahCredential {
     }
   }
 
-  static async uploadOrganizationLogo (params: File) {
+  async uploadOrganizationLogo (params: File) {
     try {
       const response: GraphQLResponse = await graphqlClient.request(UPLOADORGANIZATIONIMAGE, {
         file: params
@@ -184,7 +184,7 @@ class EzrahCredential {
     }
   }
 
-  static async issuedCredentials (params: IssuedCredentials) : Promise<IssuedCredentialsResponse | null> {
+  async issuedCredentials (params: IssuedCredentials) : Promise<IssuedCredentialsResponse | null> {
 
     try {
       const response: GraphQLResponse = await graphqlClient.request(ISSUEDCREDENTIALS, {
@@ -209,7 +209,7 @@ class EzrahCredential {
     }
   }
 
-  static async credentialAnalytics(): Promise<CredentialAnalytics | null> {
+  async credentialAnalytics(): Promise<CredentialAnalytics | null> {
 
     try {
       const response: GraphQLResponse = await graphqlClient.request(CREDENTIALANALYTICS);
@@ -225,7 +225,7 @@ class EzrahCredential {
     }
   }
 
-  static async templates(): Promise<TemplateListing | null> {
+  async templates(): Promise<TemplateListing | null> {
 
     try {
       const response : GraphQLResponse = await graphqlClient.request(TEMPLATES);
@@ -240,7 +240,7 @@ class EzrahCredential {
     }
   }
   
-  static async resolveDID(params: string): Promise<ResolvedDID | null> {
+  async resolveDID(params: string): Promise<ResolvedDID | null> {
     try {
       const response: GraphQLResponse = await graphqlClient.request(RESOLVEDID, {
         did: params
@@ -256,7 +256,7 @@ class EzrahCredential {
     }
   }
 
-  static async verifcationModel(): Promise<VerificationModelListing | null> {
+  async verifcationModel(): Promise<VerificationModelListing | null> {
 
     try {
       const response: GraphQLResponse = await graphqlClient.request(VERIFICATIONMODELS);
@@ -271,7 +271,7 @@ class EzrahCredential {
     }
   }
 
-  static async verifcationRequests(params: string): Promise<VerificationRequestListing | null> {
+  async verifcationRequests(params: string): Promise<VerificationRequestListing | null> {
 
     try {
       
@@ -289,7 +289,7 @@ class EzrahCredential {
     }
   }
 
-  static async apiKeys(): Promise<OrganizationApiKeyResponse | null> {
+  async apiKeys(): Promise<OrganizationApiKeyResponse | null> {
     try {
       
       const response: GraphQLResponse = await graphqlClient.request(APIKEYS);
@@ -303,7 +303,7 @@ class EzrahCredential {
     }
   }
 
-  static async organization(): Promise<OrganizationDetails | null> {
+  async organization(): Promise<OrganizationDetails | null> {
 
     try {
       const response: GraphQLResponse = await graphqlClient.request(ORGANIZATION);
@@ -318,7 +318,7 @@ class EzrahCredential {
     }
   }
 
-  static async webhooks(): Promise<CredentialWebhookListings | null> {
+  async webhooks(): Promise<CredentialWebhookListings | null> {
 
     try {
       
