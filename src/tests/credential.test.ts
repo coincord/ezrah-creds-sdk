@@ -21,6 +21,7 @@ describe('Credential', () => {
   let organizationDID: string;
   let organizationAPIKey: string;
   let webhookID: string;
+  let apiKeyID: string;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -112,4 +113,30 @@ describe('Credential', () => {
     expect(response?.updateCredentialWebhook.name).toBe('Updated Jest Test Webhook');
   });
 
+  it('Delete Webhook', async () => {
+    const response = await ezrahCredential.deleteCredentialWebhook(webhookID);
+
+    expect(typeof response).toBe('boolean');
+    expect(response).toBe(true);
+  });
+
+  it('Add Api Key', async () => {
+    const params: string = 'Jest Test API Key';
+
+    const response = await ezrahCredential.addOrganizationApiKey(params);
+
+    expect(response?.addOrganizationApiKey.id).toBeDefined();
+    expect(response?.addOrganizationApiKey.api_key).toBeDefined();
+    expect(response?.addOrganizationApiKey.title).toBe(params);
+
+    apiKeyID = response?.addOrganizationApiKey.id!;
+    expect(apiKeyID).toBeDefined();
+  });
+
+  it('Delete Api Key', async () => {
+    const response = await ezrahCredential.deleteOrganizationApiKey(apiKeyID);
+
+    expect(typeof response).toBe('boolean');
+    expect(response).toBe(true);
+  });
 });

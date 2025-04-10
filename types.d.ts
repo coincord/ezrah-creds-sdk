@@ -180,10 +180,12 @@ declare global {
   }
 
   interface OrganizationApiKeyResponse {
-    id: string;
-    title: string;
-    api_key: string;
-    created_at: string;
+    addOrganizationApiKey: {
+      id: string;
+      title: string;
+      api_key: string;
+      created_at: string;
+    }
   }
 
   interface OrganizationApiKeyListing {
