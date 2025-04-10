@@ -23,6 +23,7 @@ describe('Credential', () => {
   let webhookID: string;
   let apiKeyID: string;
   let testlogo = new File(['dummy content'], 'testlogo.png', { type: 'image/png' });
+  let verificationModelID: string;
 
   const dateRange = (() => {
     const now = new Date();
@@ -97,7 +98,7 @@ describe('Credential', () => {
 
   });
 
-  it('Add Webhook', async () => {
+  it('Add Webhook - One', async () => {
     const params: CreateCredentialsWebhook = {
       request_key: organizationAPIKey,
       name: 'Jest Test Webhook',
@@ -112,7 +113,34 @@ describe('Credential', () => {
     webhookID = response?.addCredentialsWebhook.id!;
   });
 
-  it('Update Webhook', async () => {
+  it('Add Webhook - Two', async () => {
+    const params: CreateCredentialsWebhook = {
+      request_key: organizationAPIKey,
+      name: 'Jest Test Webhook',
+      webhook_url: 'https://example.com/webhook/two'
+    };
+
+    const response = await ezrahCredential.addCredentialsWebhook(params);
+
+    expect(response?.addCredentialsWebhook.id).toBeDefined();
+    expect(response?.addCredentialsWebhook.name).toBeDefined();
+
+  });
+
+  it('Add Webhook - Three', async () => {
+    const params: CreateCredentialsWebhook = {
+      request_key: organizationAPIKey,
+      name: 'Jest Test Webhook',
+      webhook_url: 'https://example.com/webhook/three'
+    };
+
+    const response = await ezrahCredential.addCredentialsWebhook(params);
+
+    expect(response?.addCredentialsWebhook.id).toBeDefined();
+    expect(response?.addCredentialsWebhook.name).toBeDefined();
+  });
+
+  it('Update Webhook - One ', async () => {
     const params: UpdateCredentialWebhook = {
       webhook_id: webhookID,
       request_key: organizationAPIKey,
@@ -126,14 +154,14 @@ describe('Credential', () => {
     expect(response?.updateCredentialWebhook.name).toBe('Updated Jest Test Webhook');
   });
 
-  it('Delete Webhook', async () => {
+  it('Delete Webhook - One ', async () => {
     const response = await ezrahCredential.deleteCredentialWebhook(webhookID);
 
     expect(typeof response).toBe('boolean');
     expect(response).toBe(true);
   });
 
-  it('Add Api Key', async () => {
+  it('Add Api Key - One )', async () => {
     const params: string = 'Jest Test API Key';
 
     const response = await ezrahCredential.addOrganizationApiKey(params);
@@ -146,7 +174,29 @@ describe('Credential', () => {
     expect(apiKeyID).toBeDefined();
   });
 
-  it('Delete Api Key', async () => {
+  it('Add Api Key - Two )', async () => {
+    const params: string = 'Jest Test API Key - Two';
+
+    const response = await ezrahCredential.addOrganizationApiKey(params);
+
+    expect(response?.addOrganizationApiKey.id).toBeDefined();
+    expect(response?.addOrganizationApiKey.api_key).toBeDefined();
+    expect(response?.addOrganizationApiKey.title).toBe(params);
+
+  });
+
+  it('Add Api Key - Three )', async () => {
+    const params: string = 'Jest Test API Key - Three';
+
+    const response = await ezrahCredential.addOrganizationApiKey(params);
+
+    expect(response?.addOrganizationApiKey.id).toBeDefined();
+    expect(response?.addOrganizationApiKey.api_key).toBeDefined();
+    expect(response?.addOrganizationApiKey.title).toBe(params);
+
+  });
+
+  it('Delete Api Key - One', async () => {
     const response = await ezrahCredential.deleteOrganizationApiKey(apiKeyID);
 
     expect(typeof response).toBe('boolean');
@@ -160,7 +210,7 @@ describe('Credential', () => {
     expect(typeof response).toBe('string');
   })
 
-  it('Get Issued Credentials', async () => {
+  it('List Issued Credentials', async () => {
     const response = await ezrahCredential.issuedCredentials();
 
     expect(typeof response?.issued_credentials).toBe('object');
@@ -170,7 +220,7 @@ describe('Credential', () => {
     expect(response?.issued_credentials.credentials.length).toBeGreaterThan(0)
   });
 
-  it ('Issued Credentials With Filter', async () => {
+  it ('List Issued Credentials With Filter', async () => {
 
     const filter: IssuedCredentials = {
       timeline: dateRange,
@@ -189,4 +239,61 @@ describe('Credential', () => {
     expect(response?.issued_credentials.credentials.length).toBeGreaterThan(0)
 
   });
+
+  it('Credential Analytics', async () => {
+
+    const response = await ezrahCredential.credentialAnalytics();
+
+    expect(typeof response?.credentials_analytics.CLAIMED).toBe('number')
+    expect(typeof response?.credentials_analytics.ISSUED).toBe('number')
+    expect(typeof response?.credentials_analytics.REVOKED).toBe('number')
+    expect(typeof response?.credentials_analytics.EXPIRED).toBe('number')
+
+  });
+
+  it('Resolve DID', async () => {
+
+    const response = await ezrahCredential.resolveDID(organizationDID);
+
+    expect(typeof response?.resolveDid.did).toBe('string')
+    expect(typeof response?.resolveDid.resolvedDID).toBe('object')
+  });
+
+  it("List Verification Models", async () => {
+
+    const response = await ezrahCredential.verifcationModel();
+
+    expect(response?.verifications_models.length).toBeGreaterThan(0);
+    expect(typeof response?.verifications_models).toBe('array')
+    expect(typeof response?.verifications_models[0].title).toBe("string")
+    expect(typeof response?.verifications_models[0].manual_verification).toBe('boolean')
+
+    verificationModelID = response?.verifications_models[0].id!;
+  
+  })
+
+  it('Verification Request', async () => {
+    const response = await ezrahCredential.verifcationRequests(verificationModelID);
+
+    expect(typeof response?.verification_requests).toBe('array');
+  })
+
+  it("List API keys", async () => {
+    const response = await ezrahCredential.apiKeys()
+
+    expect(typeof response?.api_keys).toBe('array');
+    expect(typeof response?.api_keys.length).toBeGreaterThan(0);
+
+  })
+
+  it("List Webhooks", async () => {
+    const response = await ezrahCredential.webhooks();
+
+    expect(typeof response?.credential_webhooks).toBe('array');
+    expect(response?.credential_webhooks.length).toBeGreaterThan(0);
+    expect(typeof response?.credential_webhooks[0].id).toBe('string');
+    expect(typeof response?.credential_webhooks[0].name).toBe('string');
+    expect(typeof response?.credential_webhooks[0].webhook_url).toBe('string');
+  })
+
 });

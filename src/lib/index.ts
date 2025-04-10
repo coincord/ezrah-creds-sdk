@@ -289,7 +289,7 @@ class EzrahCredential {
     }
   }
 
-  async apiKeys(): Promise<OrganizationApiKeyResponse | null> {
+  async apiKeys(): Promise<OrganizationApiKeyListing | null> {
     try {
       
       const response: GraphQLResponse = await graphqlClient.request(APIKEYS);
@@ -297,7 +297,7 @@ class EzrahCredential {
       if(!response.data) {
         throw new Error("Error occured while fetching api keys");
       }
-      return response.data as OrganizationApiKeyResponse;
+      return response.data as OrganizationApiKeyListing;
     } catch (error) {
       throw error;
     }

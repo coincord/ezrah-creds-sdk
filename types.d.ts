@@ -85,8 +85,10 @@ declare global {
   }
 
   interface ResolvedDID {
-    did: string;
-    resolvedDID: Record<string, string>;
+    resolveDid: {
+      did: string;
+      resolvedDID: Record<string, string>;
+    }
   }
 
   // VERIFICATION MODELS & REQUESTS
@@ -189,7 +191,12 @@ declare global {
   }
 
   interface OrganizationApiKeyListing {
-    organizationApiKey: OrganizationApiKeyResponse[];
+    api_keys: {
+      id: string;
+      title: string;
+      api_key: string;
+      created_at: string;
+    }[];
   }
 
   interface Organization {
