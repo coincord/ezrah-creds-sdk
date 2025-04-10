@@ -169,7 +169,7 @@ class EzrahCredential {
     }
   }
 
-  async uploadOrganizationLogo (params: File) {
+  async uploadOrganizationLogo (params: File): Promise<string> {
     try {
       const response: GraphQLResponse = await graphqlClient.request(UPLOADORGANIZATIONIMAGE, {
         file: params
@@ -178,23 +178,23 @@ class EzrahCredential {
       if (!response?.data) {
         throw new Error("Error occurs while uploading organization logo");
       }
-      return response.data;
+      return response.data as string;
     } catch (error) {
       throw error;
     }
   }
 
-  async issuedCredentials (params: IssuedCredentials) : Promise<IssuedCredentialsResponse | null> {
+  async issuedCredentials (params?: IssuedCredentials) : Promise<IssuedCredentialsResponse | null> {
 
     try {
       const response: GraphQLResponse = await graphqlClient.request(ISSUEDCREDENTIALS, {
-        cursor: params.cursor || null,
-        take: params.take || null,
+        cursor: params?.cursor || null,
+        take: params?.take || null,
         filter: {
-          timeline: params.timeline || null,
+          timeline: params?.timeline || null,
           option: {
-            status: params.status || null,
-            template_id: params.template_id || null
+            status: params?.status || null,
+            template_id: params?.template_id || null
           }
         }
       });

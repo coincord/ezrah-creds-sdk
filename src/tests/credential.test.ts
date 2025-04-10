@@ -22,6 +22,19 @@ describe('Credential', () => {
   let organizationAPIKey: string;
   let webhookID: string;
   let apiKeyID: string;
+  let testlogo = new File(['dummy content'], 'testlogo.png', { type: 'image/png' });
+
+  const dateRange = (() => {
+    const now = new Date();
+    const past = new Date();
+    past.setMonth(now.getMonth() - 6);
+  
+    const format = (date: Date) =>
+      `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}/${date.getFullYear()}`;
+  
+    return `${format(past)}-${format(now)}`;
+  })();
+  
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -138,5 +151,42 @@ describe('Credential', () => {
 
     expect(typeof response).toBe('boolean');
     expect(response).toBe(true);
+  });
+
+  it('Change Organization Logo', async () => {
+
+    const response = await ezrahCredential.uploadOrganizationLogo(testlogo);
+
+    expect(typeof response).toBe('string');
+  })
+
+  it('Get Issued Credentials', async () => {
+    const response = await ezrahCredential.issuedCredentials();
+
+    expect(typeof response?.issued_credentials).toBe('object');
+    expect(typeof response?.issued_credentials.credentials).toBe("array");
+    expect(typeof response?.issued_credentials.total_count).toBe("number");
+    expect(typeof response?.issued_credentials.size).toBe("number");
+    expect(response?.issued_credentials.credentials.length).toBeGreaterThan(0)
+  });
+
+  it ('Issued Credentials With Filter', async () => {
+
+    const filter: IssuedCredentials = {
+      timeline: dateRange,
+      status: ['CLAIMED', 'ISSUED'],
+      template_id: undefined ,
+      take: 10,
+      cursor: ''
+    }
+
+    const response = await ezrahCredential.issuedCredentials(filter);
+
+    expect(typeof response?.issued_credentials).toBe('object');
+    expect(typeof response?.issued_credentials.credentials).toBe("array");
+    expect(typeof response?.issued_credentials.total_count).toBe("number");
+    expect(typeof response?.issued_credentials.size).toBe("number");
+    expect(response?.issued_credentials.credentials.length).toBeGreaterThan(0)
+
   });
 });
