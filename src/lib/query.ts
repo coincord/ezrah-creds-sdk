@@ -1,4 +1,4 @@
-import { gql } from "graphql-request";
+import { gql } from 'graphql-request';
 
 // ISSUED § CREDENTIALS
 export const ISSUEDCREDENTIALS = gql`
@@ -31,7 +31,6 @@ export const ISSUEDCREDENTIALS = gql`
     }
   }
 `;
-
 
 export const CREDENTIALANALYTICS = gql`
   query CredsAnalytics {

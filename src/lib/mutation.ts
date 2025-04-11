@@ -1,4 +1,4 @@
-import { gql } from "graphql-request";
+import { gql } from 'graphql-request';
 
 // CRENDENTIALS
 export const CREATECREDENTIALS = gql`
@@ -49,7 +49,7 @@ export const CREATEVERIFICATIONMODEL = gql`
   }
 `;
 
-// WEBHOOKs 
+// WEBHOOKs
 export const ADDCREDENTIALSWEBHOOK = gql`
   mutation AddCredentialsWebhook($request_key: String!, $name: String!, $webhook_url: String!) {
     addCredentialsWebhook(request_key: $request_key, name: $name, webhook_url: $webhook_url) {
@@ -84,7 +84,7 @@ export const DELETECREDENTIALWEBHOOK = gql`
   mutation DeleteCrdentialWebhook($webhook_id: String!) {
     deleteCredentialWebhook(webhook_id: $webhook_id)
   }
-`
+`;
 
 // ORGANIZATION API KEYS
 

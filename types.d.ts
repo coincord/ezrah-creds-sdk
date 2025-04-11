@@ -1,5 +1,4 @@
 declare global {
-
   // CREDENTIALS
   interface Identifier {
     id: string;
@@ -13,11 +12,11 @@ declare global {
     claims: string;
   }
 
-  interface VCredential{
+  interface VCredential {
     proof: string;
     proof_type: string;
     credential: string;
-  } 
+  }
 
   interface Credentials {
     id: string;
@@ -27,8 +26,8 @@ declare global {
     credential_template_id: string;
     credential_template: {
       title: string;
-      id: string
-    }
+      id: string;
+    };
     holder: string;
     created_at: string;
   }
@@ -42,24 +41,24 @@ declare global {
   }
 
   interface IssuedCredentialsResponse {
-    issued_credentials:{
+    issued_credentials: {
       total_count: number;
       size: number;
-      credentials: Credentials[]
-    }
+      credentials: Credentials[];
+    };
   }
 
   interface CreateCredentialSDK {
     title: string;
     template_claim_id: string;
-    claims:  Record<string, string>;
+    claims: Record<string, string>;
   }
 
   interface CredentialSDKResponse {
     createCredentialSDK: {
       url: string;
       pending_id: string;
-    }
+    };
   }
 
   interface CredentialAnalytics {
@@ -88,7 +87,7 @@ declare global {
     resolveDid: {
       did: string;
       resolvedDID: Record<string, string>;
-    }
+    };
   }
 
   // VERIFICATION MODELS & REQUESTS
@@ -115,7 +114,7 @@ declare global {
 
   export interface CreateVerificationModelRes {
     createVerificationModel: VerificationModel;
-  } 
+  }
 
   interface VerificationModelListing {
     verifications_models: VerificationModel[];
@@ -128,7 +127,7 @@ declare global {
     issuer_match: string;
     claims_match: string;
   }
-  
+
   interface VerificationRequestListing {
     verification_requests: VerificationRequest[];
   }
@@ -143,13 +142,13 @@ declare global {
 
   interface CredentialsWebhookResponse {
     addCredentialsWebhook: {
-      id: string
-      name: string
-      request_key: string
-      webhook_url: string
-      last_used: string
-      created_at: string
-    }
+      id: string;
+      name: string;
+      request_key: string;
+      webhook_url: string;
+      last_used: string;
+      created_at: string;
+    };
   }
 
   export interface CredentialWebHook {
@@ -157,7 +156,7 @@ declare global {
     name: string;
     webhook_url: string;
   }
-  
+
   export interface CredentialWebhookListings {
     credential_webhooks: CredentialWebHook[];
   }
@@ -174,7 +173,7 @@ declare global {
       id: string;
       name: string;
       webhook_url: string;
-    }
+    };
   }
 
   interface AddOrganizationApiKey {
@@ -187,7 +186,7 @@ declare global {
       title: string;
       api_key: string;
       created_at: string;
-    }
+    };
   }
 
   interface OrganizationApiKeyListing {
@@ -213,8 +212,6 @@ declare global {
   interface OrganizationDetails {
     organization: Organization;
   }
-
 }
 
-
-export default {}
+export default {};

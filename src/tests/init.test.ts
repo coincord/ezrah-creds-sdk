@@ -6,5 +6,5 @@ jest.mock('graphl-request', () => {
   return {
     GraphQLClient: jest.fn(() => mClient),
     gql: jest.fn((strings) => strings),
-  }
-})
+  };
+});
