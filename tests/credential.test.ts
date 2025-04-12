@@ -39,8 +39,15 @@ describe('Credential', () => {
   });
 
   it('Create a GraphQLClient instance', () => {
-    expect(graphQLClient).toHaveBeenCalledTimes(1);
-    expect(ezrahCredential.getClient()).toBeInstanceOf(GraphQLClient);
+    const spy = jest.spyOn(EzrahCredential.prototype, 'getClient');
+
+    ezrahCredential = new EzrahCredential(); // this triggers the spy
+    graphQLClient = ezrahCredential.getClient();
+  
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(graphQLClient).toBeInstanceOf(GraphQLClient);
+  
+    spy.mockRestore();
   });
 
   it('Organization Details', async () => {
