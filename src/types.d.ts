@@ -41,11 +41,9 @@ declare global {
   }
 
   interface IssuedCredentialsResponse {
-    issued_credentials: {
-      total_count: number;
-      size: number;
-      credentials: Credentials[];
-    };
+    total_count: number;
+    size: number;
+    credentials: Credentials[];
   }
 
   interface CreateCredentialSDK {
@@ -55,19 +53,15 @@ declare global {
   }
 
   interface CredentialSDKResponse {
-    createCredentialSDK: {
       url: string;
       pending_id: string;
-    };
   }
 
   interface CredentialAnalytics {
-    credentials_analytics: {
-      ISSUED: number;
-      CLAIMED: number;
-      REVOKED: number;
-      EXPIRED: number;
-    };
+    ISSUED: number;
+    CLAIMED: number;
+    REVOKED: number;
+    EXPIRED: number;
   }
 
   // TEMPLATEs
@@ -84,10 +78,8 @@ declare global {
   }
 
   interface ResolvedDID {
-    resolveDid: {
-      did: string;
-      resolvedDID: Record<string, string>;
-    };
+    did: string;
+    resolvedDID: Record<string, string>;
   }
 
   // VERIFICATION MODELS & REQUESTS
@@ -96,7 +88,7 @@ declare global {
     title: string;
     purpose: string;
     claims_match: string;
-    issuer_match: string;
+    isser_match: string;
     manual_verification: boolean;
   }
 
@@ -141,14 +133,12 @@ declare global {
   }
 
   interface CredentialsWebhookResponse {
-    addCredentialsWebhook: {
       id: string;
       name: string;
       request_key: string;
       webhook_url: string;
       last_used: string;
       created_at: string;
-    };
   }
 
   export interface CredentialWebHook {
@@ -169,11 +159,9 @@ declare global {
   }
 
   interface UpdateCredentialWebhookResponse {
-    updateCredentialWebhook: {
       id: string;
       name: string;
       webhook_url: string;
-    };
   }
 
   interface AddOrganizationApiKey {
@@ -181,21 +169,18 @@ declare global {
   }
 
   interface OrganizationApiKeyResponse {
-    addOrganizationApiKey: {
       id: string;
       title: string;
       api_key: string;
       created_at: string;
-    };
   }
 
   interface OrganizationApiKeyListing {
-    api_keys: {
+  
       id: string;
       title: string;
       api_key: string;
       created_at: string;
-    }[];
   }
 
   interface Organization {
