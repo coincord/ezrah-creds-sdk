@@ -2,8 +2,10 @@
   "name": "ezrah-creds-sdk",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
+
   "scripts": {
-    "test": "jest",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "lint": "eslint 'src/**/*.{ts,tsx}'",
     "format": "prettier --write 'src/**/*.{ts,tsx,json,md}'",
     "lint:fix": "eslint 'src/**/*.{ts,tsx}' --fix"

@@ -1,6 +1,7 @@
 /* eslint-disable no-useless-catch */
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
+
 import { GraphQLClient, GraphQLResponse } from 'graphql-request';
 import graphqlClient from './requester';
 import {

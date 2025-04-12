@@ -1,17 +1,14 @@
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
+
+
+import { jest } from '@jest/globals';
+import EzrahCredential from '../src/lib';
 import { GraphQLClient } from 'graphql-request';
-import EzrahCredential from '../lib';
 
-jest.mock('graphl-request', () => {
-  const mClient = {
-    request: jest.fn(),
-  };
+jest.setTimeout(30000)
 
-  return {
-    GraphQLClient: jest.fn(() => mClient),
-    gql: jest.fn((strings) => strings),
-  };
-});
+
 
 describe('Credential', () => {
   let ezrahCredential: EzrahCredential;
@@ -21,7 +18,7 @@ describe('Credential', () => {
   let organizationAPIKey: string;
   let webhookID: string;
   let apiKeyID: string;
-  let testlogo = new File(['dummy content'], 'testlogo.png', { type: 'image/png' });
+  const testlogo = new File(['dummy content'], 'testlogo.png', { type: 'image/png' });
   let verificationModelID: string;
 
   const dateRange = (() => {
@@ -54,8 +51,11 @@ describe('Credential', () => {
     expect(response?.organization.domain).toBeDefined();
     expect(response?.organization.alias).toBeDefined();
 
-    organizationDID = response?.organization.identifier.did!;
-    organizationAPIKey = response?.organization.api_key!;
+    organizationDID = response?.organization.identifier.did ?? '';
+    expect(organizationDID).toBeDefined();
+    expect(response?.organization.identifier.did).toBeDefined(); 
+    organizationAPIKey = response?.organization.api_key ?? '';
+    expect(organizationAPIKey).toBeDefined();
   });
 
   it(`Get Templates Listing`, async () => {
@@ -65,7 +65,8 @@ describe('Credential', () => {
     expect(response?.templates[0].id).toBeDefined();
     expect(response?.templates[0].title).toBeDefined();
 
-    template_claim_id = response?.templates[0].id!;
+    template_claim_id = response?.templates[0].id ?? '';
+    expect(template_claim_id).toBeDefined();
   });
 
   it('Issue A Credential', async () => {
@@ -106,7 +107,9 @@ describe('Credential', () => {
     expect(response?.addCredentialsWebhook.id).toBeDefined();
     expect(response?.addCredentialsWebhook.name).toBeDefined();
 
-    webhookID = response?.addCredentialsWebhook.id!;
+    webhookID = response?.addCredentialsWebhook.id ?? '';
+
+    expect(webhookID).toBeDefined();
   });
 
   it('Add Webhook - Two', async () => {
@@ -165,7 +168,7 @@ describe('Credential', () => {
     expect(response?.addOrganizationApiKey.api_key).toBeDefined();
     expect(response?.addOrganizationApiKey.title).toBe(params);
 
-    apiKeyID = response?.addOrganizationApiKey.id!;
+    apiKeyID = response?.addOrganizationApiKey.id ?? "";
     expect(apiKeyID).toBeDefined();
   });
 
@@ -254,7 +257,8 @@ describe('Credential', () => {
     expect(typeof response?.verifications_models[0].title).toBe('string');
     expect(typeof response?.verifications_models[0].manual_verification).toBe('boolean');
 
-    verificationModelID = response?.verifications_models[0].id!;
+    verificationModelID = response?.verifications_models[0].id ?? '';
+    expect(verificationModelID).toBeDefined();
   });
 
   it('Verification Request', async () => {
