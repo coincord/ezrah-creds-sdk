@@ -10,8 +10,11 @@ console.log('Access key:', process.env.EZRAH_ORGANIZATION_API_KEY);
 const graphqlClient = new GraphQLClient(`https://${process.env.EZRAH_CREDENTIAL_BASE_URL}`, {
   headers: {
     'Content-Type': 'application/json',
-    'Access-Key': <string>process.env.EZRAH_ORGANIZATION_API_KEY,
+    'access-key': <string>process.env.EZRAH_ORGANIZATION_API_KEY,
   },
 });
+
+console.log('GraphlqClient initialized:', graphqlClient);
+
 
 export default graphqlClient;

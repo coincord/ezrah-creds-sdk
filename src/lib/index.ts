@@ -232,15 +232,15 @@ class EzrahCredential {
     }
   }
 
-  async templates(): Promise<TemplateListing | null> {
+  async templates(): Promise<Templates[] | null> {
     try {
       const response: GraphQLResponse = await graphqlClient.request(TEMPLATES);
-
-      if (!response.data) {
+ 
+      if (!response.templates) {
         throw new Error('Error occurs while feyching templates');
       }
 
-      return response.data as TemplateListing;
+      return response.templates as Templates[];
     } catch (error) {
       throw error;
     }
