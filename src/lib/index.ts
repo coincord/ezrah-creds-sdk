@@ -4,19 +4,8 @@ dotenv.config();
 
 import { GraphQLClient, GraphQLResponse } from 'graphql-request';
 import graphqlClient from './requester';
+import { CREATECREDENTIALS, CREATECREDENTIALSDK, CREATEVERIFICATIONMODEL } from './mutation';
 import {
-  ADDCREDENTIALSWEBHOOK,
-  ADDORGANIZATIONAPIKEY,
-  CREATECREDENTIALS,
-  CREATECREDENTIALSDK,
-  CREATEVERIFICATIONMODEL,
-  DELETECREDENTIALWEBHOOK,
-  DELETEORGANIZATIONAPIKEY,
-  UPDATECREDENTIALWEBHOOK,
-  UPLOADORGANIZATIONIMAGE,
-} from './mutation';
-import {
-  APIKEYS,
   CREDENTIALANALYTICS,
   CREDENTIALWEBHOOKS,
   ISSUEDCREDENTIALS,
@@ -86,109 +75,6 @@ class EzrahCredential {
         throw new Error('Error occurs while creating verification model');
       }
       return response.createVerificationModel as VerificationModel;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async addCredentialsWebhook(
-    params: CreateCredentialsWebhook,
-  ): Promise<CredentialsWebhookResponse | null> {
-    try {
-      const response: GraphQLResponse = await graphqlClient.request(ADDCREDENTIALSWEBHOOK, {
-        request_key: params.request_key,
-        name: params.name,
-        webhook_url: params.webhook_url,
-      });
-
-      if (!response?.addCredentialsWebhook) {
-        throw new Error('Error occurs while adding credentials webhook');
-      }
-
-      return response.addCredentialsWebhook as CredentialsWebhookResponse;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async updateCredentialWebhook(
-    params: UpdateCredentialWebhook,
-  ): Promise<UpdateCredentialWebhookResponse | null> {
-    try {
-      const response: GraphQLResponse = await graphqlClient.request(UPDATECREDENTIALWEBHOOK, {
-        webhook_id: params.webhook_id,
-        request_key: params.request_key,
-        name: params.name,
-        webhook_url: params.webhook_url,
-      });
-
-      if (!response?.updateCredentialWebhook) {
-        throw new Error('Error occurs while updating credentials webhook');
-      }
-
-      return response.updateCredentialWebhook as UpdateCredentialWebhookResponse;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async deleteCredentialWebhook(params: string) {
-    try {
-      const response: GraphQLResponse = await graphqlClient.request(DELETECREDENTIALWEBHOOK, {
-        webhook_id: params,
-      });
-      if (!response.deleteCredentialWebhook) {
-        throw new Error('Error occurs while deleting credentials webhook');
-      }
-
-      return response.deleteCredentialWebhook;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async addOrganizationApiKey(params: string): Promise<OrganizationApiKeyListing | null> {
-    try {
-      const response: GraphQLResponse = await graphqlClient.request(ADDORGANIZATIONAPIKEY, {
-        title: params,
-      });
-
-      if (!response?.addOrganizationApiKey) {
-        throw new Error('Error occurs while adding organization api key');
-      }
-
-      return response.addOrganizationApiKey as OrganizationApiKeyListing;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async deleteOrganizationApiKey(params: string) {
-    try {
-      const response: GraphQLResponse = await graphqlClient.request(DELETEORGANIZATIONAPIKEY, {
-        id: params,
-      });
-
-      if (!response.deleteOrganizationApiKey) {
-        throw new Error('Error occurs while deleting organization api key');
-      }
-
-      return response.deleteOrganizationApiKey;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async uploadOrganizationLogo(params: File): Promise<string> {
-    try {
-      const response: GraphQLResponse = await graphqlClient.request(UPLOADORGANIZATIONIMAGE, {
-        file: params,
-      });
-
-      if (!response?.uploadOrganizationImage) {
-        throw new Error('Error occurs while uploading organization logo');
-      }
-      return response.uploadOrganizationImage as string;
     } catch (error) {
       throw error;
     }
@@ -286,19 +172,6 @@ class EzrahCredential {
       }
 
       return response.verification_requests as VerificationRequest[];
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async apiKeys(): Promise<OrganizationApiKeyListing[] | null> {
-    try {
-      const response: GraphQLResponse = await graphqlClient.request(APIKEYS);
-
-      if (!response.api_keys) {
-        throw new Error('Error occured while fetching api keys');
-      }
-      return response.api_keys as OrganizationApiKeyListing[];
     } catch (error) {
       throw error;
     }
