@@ -4,7 +4,14 @@ dotenv.config();
 
 import { GraphQLClient, GraphQLResponse } from 'graphql-request';
 import graphqlClient from './requester';
-import { CREATECREDENTIALS, CREATECREDENTIALSDK, CREATEVERIFICATIONMODEL } from './mutation';
+import {
+  ADDCREDENTIALSWEBHOOK,
+  CREATECREDENTIALS,
+  CREATECREDENTIALSDK,
+  CREATEVERIFICATIONMODEL,
+  DELETECREDENTIALWEBHOOK,
+  UPDATECREDENTIALWEBHOOK,
+} from './mutation';
 import {
   CREDENTIALANALYTICS,
   CREDENTIALWEBHOOKS,
@@ -75,6 +82,63 @@ class EzrahCredential {
         throw new Error('Error occurs while creating verification model');
       }
       return response.createVerificationModel as VerificationModel;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async addCredentialsWebhook(
+    params: CreateCredentialsWebhook,
+  ): Promise<CredentialsWebhookResponse | null> {
+    try {
+      const response: GraphQLResponse = await graphqlClient.request(ADDCREDENTIALSWEBHOOK, {
+        request_key: params.request_key,
+        name: params.name,
+        webhook_url: params.webhook_url,
+      });
+
+      if (!response?.addCredentialsWebhook) {
+        throw new Error('Error occurs while adding credentials webhook');
+      }
+
+      return response.addCredentialsWebhook as CredentialsWebhookResponse;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async updateCredentialWebhook(
+    params: UpdateCredentialWebhook,
+  ): Promise<UpdateCredentialWebhookResponse | null> {
+    try {
+      const response: GraphQLResponse = await graphqlClient.request(UPDATECREDENTIALWEBHOOK, {
+        webhook_id: params.webhook_id,
+        request_key: params.request_key,
+        name: params.name,
+        webhook_url: params.webhook_url,
+      });
+
+      if (!response?.updateCredentialWebhook) {
+        throw new Error('Error occurs while updating credentials webhook');
+      }
+
+      return response.updateCredentialWebhook as UpdateCredentialWebhookResponse;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteCredentialWebhook(params: string) {
+    try {
+      const response: GraphQLResponse = await graphqlClient.request(DELETECREDENTIALWEBHOOK, {
+        webhook_id: params,
+      });
+      console.log(response);
+      if (!response.deleteCredentialWebhook) {
+        throw new Error('Error occurs while deleting credentials webhook');
+      }
+
+      return response.deleteCredentialWebhook;
     } catch (error) {
       throw error;
     }
@@ -167,6 +231,7 @@ class EzrahCredential {
       const response: GraphQLResponse = await graphqlClient.request(VERIFICATIONREQUESTS, {
         verification_model: params,
       });
+      console.log(response);
       if (!response.verification_requests) {
         throw new Error('Error occured while fetching verifcation requests');
       }

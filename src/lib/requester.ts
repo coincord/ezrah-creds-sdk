@@ -8,6 +8,7 @@ const graphqlClient = new GraphQLClient(
   {
     headers: {
       'Content-Type': 'application/json',
+      'User-Agent': 'node',
       'access-key': `Bearer ${<string>process.env.EZRAH_ORGANIZATION_API_KEY}`,
     },
   },

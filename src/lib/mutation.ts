@@ -48,3 +48,40 @@ export const CREATEVERIFICATIONMODEL = gql`
     }
   }
 `;
+
+// WEBHOOKs
+export const ADDCREDENTIALSWEBHOOK = gql`
+  mutation AddCredentialsWebhook($request_key: String!, $name: String!, $webhook_url: String!) {
+    addCredentialsWebhook(request_key: $request_key, name: $name, webhook_url: $webhook_url) {
+      id
+      name
+      webhook_url
+    }
+  }
+`;
+
+export const UPDATECREDENTIALWEBHOOK = gql`
+  mutation UpdateCredentialWebhook(
+    $webhook_id: String!
+    $request_key: String!
+    $name: String!
+    $webhook_url: String!
+  ) {
+    updateCredentialWebhook(
+      webhook_id: $webhook_id
+      request_key: $request_key
+      name: $name
+      webhook_url: $webhook_url
+    ) {
+      id
+      name
+      webhook_url
+    }
+  }
+`;
+
+export const DELETECREDENTIALWEBHOOK = gql`
+  mutation DeleteCrdentialWebhook($webhook_id: String!) {
+    deleteCredentialWebhook(webhook_id: $webhook_id)
+  }
+`;

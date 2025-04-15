@@ -1,14 +1,11 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-
 import { jest } from '@jest/globals';
 import EzrahCredential from '../src/lib';
 import { GraphQLClient } from 'graphql-request';
 
-jest.setTimeout(30000)
-
-
+jest.setTimeout(30000);
 
 describe('Credential', () => {
   let ezrahCredential: EzrahCredential;
@@ -17,7 +14,6 @@ describe('Credential', () => {
   let organizationDID: string;
   let organizationAPIKey: string;
   let webhookID: string;
-  let apiKeyID: string;
   // const testlogo = new File(['dummy content'], 'testlogo.png', { type: 'image/png' });
   let verificationModelID: string;
 
@@ -43,10 +39,10 @@ describe('Credential', () => {
 
     ezrahCredential = new EzrahCredential(); // this triggers the spy
     graphQLClient = ezrahCredential.getClient();
-  
+
     expect(spy).toHaveBeenCalledTimes(1);
     expect(graphQLClient).toBeInstanceOf(GraphQLClient);
-  
+
     spy.mockRestore();
   });
 
@@ -60,14 +56,14 @@ describe('Credential', () => {
 
     organizationDID = response?.identifier.did ?? '';
     expect(organizationDID).toBeDefined();
-    expect(response?.identifier.did).toBeDefined(); 
+    expect(response?.identifier.did).toBeDefined();
     organizationAPIKey = response?.api_key ?? '';
     expect(organizationAPIKey).toBeDefined();
   });
 
   it(`Get Templates Listing`, async () => {
     const response = await ezrahCredential.templates();
-  
+
     expect(response?.length).toBeGreaterThan(2);
     expect(response?.[0].id).toBeDefined();
     expect(response?.[0].title).toBeDefined();
@@ -81,24 +77,24 @@ describe('Credential', () => {
       title: 'Emplployee Onboarding',
       template_claim_id: template_claim_id,
       claims: {
-        first_name: "Lampety",
-        last_name: "Yamalamala",
-        date_of_birth: "2005-05-15",
-        email: "laminea.yamal@example.com",
-        phone_number: "+1234567890",
-        address: "123 Main St, Springfield",
-        emergency_contact_name: "Jane Doe",
-        emergency_contact_phone: "+1987654321",
-        employment_start_date: "2022-01-10",
-        job_title: "Soccer Player",
-        department: "Football",
-        background_check_status: "Cleared",
-        drug_test_result: "Negative"
+        first_name: 'Lampety',
+        last_name: 'Yamalamala',
+        date_of_birth: '2005-05-15',
+        email: 'laminea.yamal@example.com',
+        phone_number: '+1234567890',
+        address: '123 Main St, Springfield',
+        emergency_contact_name: 'Jane Doe',
+        emergency_contact_phone: '+1987654321',
+        employment_start_date: '2022-01-10',
+        job_title: 'Soccer Player',
+        department: 'Football',
+        background_check_status: 'Cleared',
+        drug_test_result: 'Negative',
       },
     };
 
     const response = await ezrahCredential.issueCredentialSDK(params);
-    console.log(response)
+    console.log(response);
     expect(typeof response?.pending_id).toBe('string');
     expect(typeof response?.url).toBe('string');
   });
@@ -115,9 +111,9 @@ describe('Credential', () => {
     const response = await ezrahCredential.createVerificationModel(params);
     expect(response?.id).toBeDefined();
     expect(response?.title).toBeDefined();
-    expect(response?.purpose).toBe("Freelance Employee")
+    expect(response?.purpose).toBe('Freelance Employee');
     expect(response?.manual_verification).toBe(true);
-    expect(response?.title).toBe("Employee Freelancing")
+    expect(response?.title).toBe('Employee Freelancing');
   });
 
   it('Add Webhook - One', async () => {
@@ -184,53 +180,6 @@ describe('Credential', () => {
     expect(response).toBe(true);
   });
 
-  it('Add Api Key - One )', async () => {
-    const params: string = 'Test API Key-One';
-
-    const response = await ezrahCredential.addOrganizationApiKey(params);
-
-    expect(response?.id).toBeDefined();
-    expect(response?.api_key).toBeDefined();
-    expect(response?.title).toBe(params);
-
-    apiKeyID = response?.id ?? "";
-    expect(apiKeyID).toBeDefined();
-  });
-
-  it('Add Api Key - Two )', async () => {
-    const params: string = 'API Key - Two';
-
-    const response = await ezrahCredential.addOrganizationApiKey(params);
-
-    expect(response?.id).toBeDefined();
-    expect(response?.api_key).toBeDefined();
-    expect(response?.title).toBe(params);
-  });
-
-  it('Add Api Key - Three )', async () => {
-    const params: string = 'API Key - Three';
-
-    const response = await ezrahCredential.addOrganizationApiKey(params);
-
-    expect(response?.id).toBeDefined();
-    expect(response?.api_key).toBeDefined();
-    expect(response?.title).toBe(params);
-  });
-
-  it('Delete Api Key - One', async () => {
-    const response = await ezrahCredential.deleteOrganizationApiKey(apiKeyID);
-    console.log(response)
-
-    expect(typeof response).toBe('boolean');
-    expect(response).toBe(true);
-  });
-
-  // it('Change Organization Logo', async () => {
-  //   const response = await ezrahCredential.uploadOrganizationLogo(testlogo);
-
-  //   expect(typeof response).toBe('string');
-  // });
-
   it('List Issued Credentials', async () => {
     const response = await ezrahCredential.issuedCredentials();
 
@@ -277,7 +226,7 @@ describe('Credential', () => {
 
   it('List Verification Models', async () => {
     const response = await ezrahCredential.verifcationModel();
-    
+
     expect(response?.length).toBeGreaterThan(0);
     expect(typeof response).toBe('object');
     expect(typeof response?.[0].title).toBe('string');
@@ -293,16 +242,8 @@ describe('Credential', () => {
     expect(typeof response)?.toBe('object');
   });
 
-  it('List API keys', async () => {
-    const response = await ezrahCredential.apiKeys();
-    console.log(response);
-
-    expect(typeof response).toBe('object');
-    expect(response?.length).toBeGreaterThan(0);
-  });
-
   it('List Webhooks', async () => {
-    const response = await ezrahCredential.webhooks(); 
+    const response = await ezrahCredential.webhooks();
     console.log(response);
     expect(typeof response).toBe('object');
     expect(response?.length).toBeGreaterThan(0);
