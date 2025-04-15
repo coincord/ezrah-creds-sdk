@@ -96,18 +96,6 @@ export const VERIFICATIONREQUESTS = gql`
   }
 `;
 
-//APIKEYs
-export const APIKEYS = gql`
-  query ApiKeys {
-    api_keys {
-      id
-      api_key
-      title
-      created_at
-    }
-  }
-`;
-
 // ORGANIZATION
 export const ORGANIZATION = gql`
   query Organization {
@@ -118,16 +106,7 @@ export const ORGANIZATION = gql`
       alias
       logo
       identifier {
-        id
         did
-        created_at
-      }
-      api_key
-      api_keys {
-        id
-        api_key
-        title
-        created_at
       }
     }
   }
