@@ -6,17 +6,13 @@ import { GraphQLClient, GraphQLResponse } from 'graphql-request';
 import graphqlClient from './requester';
 import {
   ADDCREDENTIALSWEBHOOK,
-  ADDORGANIZATIONAPIKEY,
   CREATECREDENTIALS,
   CREATECREDENTIALSDK,
   CREATEVERIFICATIONMODEL,
   DELETECREDENTIALWEBHOOK,
-  DELETEORGANIZATIONAPIKEY,
   UPDATECREDENTIALWEBHOOK,
-  UPLOADORGANIZATIONIMAGE,
 } from './mutation';
 import {
-  APIKEYS,
   CREDENTIALANALYTICS,
   CREDENTIALWEBHOOKS,
   ISSUEDCREDENTIALS,
@@ -137,58 +133,12 @@ class EzrahCredential {
       const response: GraphQLResponse = await graphqlClient.request(DELETECREDENTIALWEBHOOK, {
         webhook_id: params,
       });
+      console.log(response);
       if (!response.deleteCredentialWebhook) {
         throw new Error('Error occurs while deleting credentials webhook');
       }
 
       return response.deleteCredentialWebhook;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async addOrganizationApiKey(params: string): Promise<OrganizationApiKeyListing | null> {
-    try {
-      const response: GraphQLResponse = await graphqlClient.request(ADDORGANIZATIONAPIKEY, {
-        title: params,
-      });
-
-      if (!response?.addOrganizationApiKey) {
-        throw new Error('Error occurs while adding organization api key');
-      }
-
-      return response.addOrganizationApiKey as OrganizationApiKeyListing;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async deleteOrganizationApiKey(params: string) {
-    try {
-      const response: GraphQLResponse = await graphqlClient.request(DELETEORGANIZATIONAPIKEY, {
-        id: params,
-      });
-
-      if (!response.deleteOrganizationApiKey) {
-        throw new Error('Error occurs while deleting organization api key');
-      }
-
-      return response.deleteOrganizationApiKey;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async uploadOrganizationLogo(params: File): Promise<string> {
-    try {
-      const response: GraphQLResponse = await graphqlClient.request(UPLOADORGANIZATIONIMAGE, {
-        file: params,
-      });
-
-      if (!response?.uploadOrganizationImage) {
-        throw new Error('Error occurs while uploading organization logo');
-      }
-      return response.uploadOrganizationImage as string;
     } catch (error) {
       throw error;
     }
@@ -281,24 +231,12 @@ class EzrahCredential {
       const response: GraphQLResponse = await graphqlClient.request(VERIFICATIONREQUESTS, {
         verification_model: params,
       });
+      console.log(response);
       if (!response.verification_requests) {
         throw new Error('Error occured while fetching verifcation requests');
       }
 
       return response.verification_requests as VerificationRequest[];
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async apiKeys(): Promise<OrganizationApiKeyListing[] | null> {
-    try {
-      const response: GraphQLResponse = await graphqlClient.request(APIKEYS);
-
-      if (!response.api_keys) {
-        throw new Error('Error occured while fetching api keys');
-      }
-      return response.api_keys as OrganizationApiKeyListing[];
     } catch (error) {
       throw error;
     }
