@@ -137,7 +137,6 @@ class EzrahCredential {
       const response: GraphQLResponse = await graphqlClient.request(DELETECREDENTIALWEBHOOK, {
         webhook_id: params,
       });
-      console.log(response)
       if (!response.deleteCredentialWebhook) {
         throw new Error('Error occurs while deleting credentials webhook');
       }
@@ -169,7 +168,7 @@ class EzrahCredential {
       const response: GraphQLResponse = await graphqlClient.request(DELETEORGANIZATIONAPIKEY, {
         id: params,
       });
- 
+
       if (!response.deleteOrganizationApiKey) {
         throw new Error('Error occurs while deleting organization api key');
       }
@@ -236,7 +235,7 @@ class EzrahCredential {
   async templates(): Promise<Templates[] | null> {
     try {
       const response: GraphQLResponse = await graphqlClient.request(TEMPLATES);
- 
+
       if (!response.templates) {
         throw new Error('Error occurs while feyching templates');
       }
@@ -282,7 +281,6 @@ class EzrahCredential {
       const response: GraphQLResponse = await graphqlClient.request(VERIFICATIONREQUESTS, {
         verification_model: params,
       });
-      console.log(response);
       if (!response.verification_requests) {
         throw new Error('Error occured while fetching verifcation requests');
       }
@@ -309,7 +307,7 @@ class EzrahCredential {
   async organization(): Promise<Organization | null> {
     try {
       const response: GraphQLResponse = await graphqlClient.request(ORGANIZATION);
- 
+
       if (!response.organization) {
         throw new Error('Error occured while fetching organization details');
       }

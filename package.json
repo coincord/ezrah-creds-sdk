@@ -1,10 +1,14 @@
 {
-  "name": "ezrah-creds-sdk",
-  "version": "1.0.0",
-  "main": "index.js",
+  "name": "@coincord/ezrah-creds-sdk",
+  "version": "1.0.0-alpha.1",
+  "description": "A module for managing and manipulating operations with bitcoin, ethereum and litecoin wallets.",
+  "main": "dist/lib/index.js",
   "type": "module",
-
+  "publishConfig": {
+    "@coincord:registry": "https://npm.pkg.github.com"
+  },
   "scripts": {
+    "build": "tsc",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "lint": "eslint 'src/**/*.{ts,tsx}'",
     "format": "prettier --write 'src/**/*.{ts,tsx,json,md}'",
@@ -13,7 +17,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "devDependencies": {
     "@eslint/js": "^9.24.0",
     "@types/jest": "^29.5.14",
