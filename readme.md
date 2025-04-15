@@ -8,13 +8,25 @@ This document provides a comprehensive overview of how to use the **Ezrah Creds 
 
 To start using the Ezrah Creds SDK, install it via npm or yarn. This will add the SDK to your project so you can begin issuing and verifying credentials and interacting with the Ezrah platform programmatically.
 
-```bash
-npm install ezrah-creds-sdk
-# or
-yarn add ezrah-creds-sdk
+> Ezrah(Coincord) Libraries are hosted on github not npm so add this to your .npmrc file, (vim ~/.npmrc)
+
+```sh
+@coincord:registry=https://npm.pkg.github.com
 ```
 
----
+With this set your environment will know to check github for coincord libraries instead of npm
+
+```sh
+# npm
+npm install @coincord/ezrah-creds-sdk
+```
+
+or
+
+```sh
+# yarn
+yarn install @coincord/ezrah-creds-sdk
+```
 
 ## Getting Started
 
