@@ -33,7 +33,7 @@ yarn install @coincord/ezrah-creds-sdk
 This section initializes the SDK. Import the main class and instantiate it to begin accessing all available methods. This object becomes your main entry point for issuing credentials, managing webhooks, and more.
 
 ```ts
-import EzrahCredential from 'ezrah-creds-sdk';
+import EzrahCredential from '@coincord/ezrah-creds-sdk';
 
 const ezrah = new EzrahCredential();
 ```
