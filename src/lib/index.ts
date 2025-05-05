@@ -63,7 +63,7 @@ class EzrahCredential {
         throw new Error('Error occurs while creating template structures');
       }
 
-      return response.data as Templates;
+      return response.createCredentialTemplateStructure as Templates;
     } catch (error) {
       throw error;
     }
