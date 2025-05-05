@@ -8,6 +8,7 @@ import {
   ADDCREDENTIALSWEBHOOK,
   CREATECREDENTIALS,
   CREATECREDENTIALSDK,
+  CREATETEMPLATESTRUCTURE,
   CREATEVERIFICATIONMODEL,
   DELETECREDENTIALWEBHOOK,
   UPDATECREDENTIALWEBHOOK,
@@ -45,6 +46,24 @@ class EzrahCredential {
         throw new Error('Error occurs while issuing credential');
       }
       return response.data as VCredential;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async createTemplateStructure(params: CreateTemplateStructure): Promise<Templates> {
+    try {
+      const response: GraphQLResponse = await graphqlClient.request(CREATETEMPLATESTRUCTURE, {
+        title: params.title,
+        claims: params.claims,
+        description: params.description,
+      });
+
+      if (!response?.createCredentialTemplateStructure) {
+        throw new Error('Error occurs while creating template structures');
+      }
+
+      return response.data as Templates;
     } catch (error) {
       throw error;
     }

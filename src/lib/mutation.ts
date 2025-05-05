@@ -11,6 +11,17 @@ export const CREATECREDENTIALS = gql`
   }
 `;
 
+export const CREATETEMPLATESTRUCTURE = gql`
+  mutation CreateTemplateStructure($claims: String!, $description: String!, $title: String!) {
+    createCredentialTemplateStructure(claims: $claims, description: $description, title: $title) {
+      id
+      title
+      claimStructure
+      created_at
+    }
+  }
+`;
+
 export const CREATECREDENTIALSDK = gql`
   mutation CreateCredentialSDK($title: String!, $template_claim_id: String!, $claims: JSON!) {
     createCredentialSDK(title: $title, template_claim_id: $template_claim_id, claims: $claims) {
