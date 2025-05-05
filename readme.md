@@ -66,8 +66,8 @@ Use this method when you want to create a new template structure for your creden
 ```ts
 const template = await ezrah.createTemplateStructure({
   claims: 'firstname, lastname, birthcert, reference_code',
-  description: "template example"
-  title: "Example Template Structure"
+  description: 'template example',
+  title: 'Example Template Structure',
 });
 ```
 
