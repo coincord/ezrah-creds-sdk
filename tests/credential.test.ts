@@ -61,6 +61,16 @@ describe('Credential', () => {
     expect(organizationAPIKey).toBeDefined();
   });
 
+  it('CreatesCredentialTemplate', async () => {
+    const credentialTemplate = await ezrahCredential.createTemplateStructure({
+      claims: 'first_name,last_name,other_details',
+      description: 'test template id',
+      title: 'Test TemplateID',
+    });
+
+    expect(credentialTemplate.id).toBeDefined();
+  });
+
   it(`Get Templates Listing`, async () => {
     const response = await ezrahCredential.templates();
 

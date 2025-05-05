@@ -52,9 +52,15 @@ declare global {
     claims: Record<string, string>;
   }
 
+  interface CreateTemplateStructure {
+    claims: string;
+    description: string;
+    title: string;
+  }
+
   interface CredentialSDKResponse {
-      url: string;
-      pending_id: string;
+    url: string;
+    pending_id: string;
   }
 
   interface CredentialAnalytics {
@@ -133,12 +139,12 @@ declare global {
   }
 
   interface CredentialsWebhookResponse {
-      id: string;
-      name: string;
-      request_key: string;
-      webhook_url: string;
-      last_used: string;
-      created_at: string;
+    id: string;
+    name: string;
+    request_key: string;
+    webhook_url: string;
+    last_used: string;
+    created_at: string;
   }
 
   export interface CredentialWebHook {
@@ -159,9 +165,9 @@ declare global {
   }
 
   interface UpdateCredentialWebhookResponse {
-      id: string;
-      name: string;
-      webhook_url: string;
+    id: string;
+    name: string;
+    webhook_url: string;
   }
 
   interface AddOrganizationApiKey {
@@ -169,18 +175,17 @@ declare global {
   }
 
   interface OrganizationApiKeyResponse {
-      id: string;
-      title: string;
-      api_key: string;
-      created_at: string;
+    id: string;
+    title: string;
+    api_key: string;
+    created_at: string;
   }
 
   interface OrganizationApiKeyListing {
-  
-      id: string;
-      title: string;
-      api_key: string;
-      created_at: string;
+    id: string;
+    title: string;
+    api_key: string;
+    created_at: string;
   }
 
   interface Organization {

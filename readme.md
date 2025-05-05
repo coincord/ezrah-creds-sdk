@@ -59,6 +59,18 @@ const credential = await ezrah.issueCredential({
 });
 ```
 
+### Create A Credential Template
+
+Use this method when you want to create a new template structure for your credentials.
+
+```ts
+const template = await ezrah.createTemplateStructure({
+  claims: 'firstname, lastname, birthcert, reference_code',
+  description: 'template example',
+  title: 'Example Template Structure',
+});
+```
+
 ### Issue via SDK Shortcut
 
 A simplified wrapper to issue credentials using just the basic details (title, claim ID, and fields). Ideal for quick issuance flows or UI-based forms.
