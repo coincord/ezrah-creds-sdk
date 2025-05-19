@@ -6,6 +6,7 @@ import { GraphQLClient, GraphQLResponse } from 'graphql-request';
 import graphqlClient from './requester';
 import {
   ADDCREDENTIALSWEBHOOK,
+  CREATE_ENCRYPTED_SDJWT_CREDENTIAL,
   CREATECREDENTIALS,
   CREATECREDENTIALSDK,
   CREATETEMPLATESTRUCTURE,
@@ -23,6 +24,9 @@ import {
   VERIFICATIONMODELS,
   VERIFICATIONREQUESTS,
 } from './query';
+import { v4 } from 'uuid';
+import { DisclosureFrame } from '@sd-jwt/types';
+import SdJwtHelper from '@coincord/sd-jwt-helper';
 
 class EzrahCredential {
   private client: GraphQLClient;
@@ -284,6 +288,45 @@ class EzrahCredential {
       }
 
       return response.credential_webhooks as CredentialWebHook[];
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async createEncryptedSdjwtCreds<T extends Record<string, unknown>>(
+    claims: T,
+    disclosure: Array<keyof T>,
+    reciever_pk: string,
+  ): Promise<EncryptedSdjwtResponse> {
+    try {
+      // @ts-expect-error TODO: Resolve on type issues between disclosure aray and disclosure frame
+      const disclosureFrame: DisclosureFrame<T> = {
+        _sd: disclosure,
+      };
+
+      const sdHasher = new SdJwtHelper.SDPackHash(() => v4());
+      const { _hash_alg, packedClaims, disclosures } = await sdHasher.packEncoding(
+        claims,
+        disclosureFrame,
+      );
+
+      const encryptedDislosure = await sdHasher.generateEncryptedDisclosure(
+        disclosures,
+        reciever_pk,
+      );
+
+      const response: GraphQLResponse = await graphqlClient.request(
+        CREATE_ENCRYPTED_SDJWT_CREDENTIAL,
+        {
+          packedRequest: {
+            _hash_alg,
+            packedClaims,
+            encrypted_disclosures: encryptedDislosure,
+          },
+        },
+      );
+
+      return response.createEncryptedSdjwtCredential as EncryptedSdjwtResponse;
     } catch (error) {
       throw error;
     }

@@ -96,3 +96,12 @@ export const DELETECREDENTIALWEBHOOK = gql`
     deleteCredentialWebhook(webhook_id: $webhook_id)
   }
 `;
+
+export const CREATE_ENCRYPTED_SDJWT_CREDENTIAL = gql`
+  mutation createEncryptedSdjwtCredential($packedRequest: JSON) {
+    createEncryptedSdjwtCredential(packedRequest: $packedRequest) {
+      _encoded
+      credential
+    }
+  }
+`;
