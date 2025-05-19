@@ -15,10 +15,11 @@ jobs:
           scope: '@coincord'
           registry-url: https://npm.pkg.github.com/
           node-version: 16
-
-      - name: Configure .npmrc for github packages.
-        run: |
-          echo "//npm.pkg.github.com/:_authToken=${{secrets.PACKAGE_TOKEN}}" > ~/.npmrc
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      # - name: Configure .npmrc for github packages.
+      #   run: |
+      #     echo "//npm.pkg.github.com/:_authToken=${{secrets.PACKAGE_TOKEN}}" > ~/.npmrc
 
       - run: npm install
       - run: npm run build
