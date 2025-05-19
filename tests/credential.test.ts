@@ -138,7 +138,7 @@ describe('Credential', () => {
         drug_test_result: 'Negative',
       },
     };
-    const response = await ezrahCredential.createEncryptedSdjwtCreds(
+    const response = await ezrahCredential.issueEncryptedSDJWT(
       params.claims,
       ['first_name', 'last_name', 'date_of_birth', 'email', 'address'],
       bytesToHex(receiverPuk),

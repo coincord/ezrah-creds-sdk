@@ -293,7 +293,7 @@ class EzrahCredential {
     }
   }
 
-  async createEncryptedSdjwtCreds<T extends Record<string, unknown>>(
+  async issueEncryptedSDJWT<T extends Record<string, unknown>>(
     claims: T,
     disclosure: Array<keyof T>,
     reciever_pk: string,
