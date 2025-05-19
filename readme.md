@@ -59,6 +59,259 @@ const credential = await ezrah.issueCredential({
 });
 ```
 
+---
+
+### Issue an Encrypted Credential
+
+Issue via SD-JWT secure end to end encryption
+
+#### 🔐 SD-JWT Secure End-to-End Encryption
+
+SD-JWT (Selective Disclosure JSON Web Token) enables users to disclose only specific claims (pieces of data) to a relying party, while keeping the rest confidential. When combined with secure end-to-end encryption, this approach ensures that sensitive information is protected both at rest and in transit.
+
+This implementation introduces secure encryption of the disclosures using ephemeral (one-time use) keys with the X25519 key exchange protocol and AES-256 encryption.
+
+---
+
+#### Encrypted Disclosures Structure
+
+```json
+{
+  encrypted_disclosures: {
+            ciphertext: 'gCxNC18f31VAoX6Mea4fh3sdI5wDOfKUuEC9CHuVEzEcmOFY1XVPX5u21Vft2...',
+            iv: 'JyZ08NSSqrbLHVCt',
+            ephemeralPubKey: 'LZQFwtDa0eSLkpPKjKpyVYlDrMcFMYN7kPdCENhefw0',
+            enc: 'AES-GCM',
+            alg: 'X25519-AES-GCM'
+          }
+        }
+}
+
+```
+
+### 🔒 How It Works
+
+#### 1. **Claim Hashing and Disclosure Generation**
+
+- Before encryption, each **claim** (e.g., name, birthdate, etc.) is **hashed** to generate its disclosure representation.
+- These hashed claims are selectively shared only when the user permits it.
+
+#### 2. **Ephemeral Key Exchange with X25519**
+
+- A fresh **ephemeral key pair** is generated for each encryption session using **X25519**, a Diffie-Hellman key exchange over Curve25519.
+- These keys are **one-time use only**, providing **forward secrecy** and preventing reuse-based attacks.
+- The **receiver’s public key** (e.g., device or backup key) is used to derive a shared secret via X25519.
+
+#### 3. **Encryption using AES-256**
+
+- The shared secret derived from X25519 is used as the **symmetric key** for encrypting the disclosure payload.
+- AES-256 in **GCM or CBC mode** (implementation-specific) is used for the encryption.
+- A **nonce** (or IV) ensures randomness for each encryption, preventing identical cipher outputs.
+
+---
+
+### 🔑 Ephemeral Key Usage
+
+| Key          | Description                                           | Purpose                                             |
+| ------------ | ----------------------------------------------------- | --------------------------------------------------- |
+| `device_key` | Ephemeral public key derived for the current device   | Used to decrypt disclosures on the current device   |
+| `back_up`    | Ephemeral key for user’s backup or recovery mechanism | Enables access during recovery or multi-device sync |
+
+- These keys are included **encrypted** and can be safely sent over the network.
+- Only the holder of the corresponding **private keys** can derive the shared secret and decrypt the disclosures.
+
+---
+
+### ✅ Benefits
+
+- **Selective Disclosure**: Users share only what’s needed.
+- **End-to-End Encrypted**: Even intermediaries can’t read the claims.
+- **Forward Secrecy**: Ephemeral keys ensure past sessions remain secure.
+- **Recovery Friendly**: The `back_up` key allows for secure restoration of encrypted data.
+
+---
+
+#### Step 1: Define Credential Claims
+
+```ts
+const claims = {
+  sub: 'subject_string_here',
+  kyc_provider: 'DOJAH',
+  passport_id: '2347BV98FB',
+  expiry_date: new Date('10-10-2027').toISOString(),
+  issuanceDate: new Date().toISOString(),
+  first_name: 'Nelson',
+  last_name: 'Obioma',
+  issuer: { id: 'issuer string here' },
+};
+
+const disclosureFrame: Array<string> = [
+  'passport_id',
+  'expiry_date',
+  'first_name',
+  'last_name',
+  'issuer',
+];
+```
+
+---
+
+### Step 2: Issue Encrypted SD-JWT Credential
+
+```ts
+const endUserPublicKey = 'HexadecimalEncodedEndUserPublickKey';
+
+const result = await ezrahCredsSDK.issueEncryptedSDJWT({
+  claims,
+  disclosureFrame,
+  endUserEd25519HexPuk: endUserPublicKey,
+});
+```
+
+---
+
+##### Result: Issued Credential
+
+```json
+{
+  "credential": "<jwt_string_here>"
+}
+```
+
+This is a signed and encrypted JWT that contains secure disclosures.
+
+---
+
+### Decoded JWT Structure
+
+```json
+{
+  "jwt": {
+    "header": {
+      "typ": "dc+sd-jwt",
+      "kid": "<key_id>",
+      "alg": "ES256K"
+    },
+    "payload": {
+      "iss": "did:ezrah:<issuer_did>",
+      "vct": "https://credentials.example.com/identity_credential",
+      "kyc_provider": "DOJAH",
+      "issuanceDate": "2025-05-15T14:23:41.174Z",
+      "_sd": ["...hashes"],
+      "_sd_alg": "sha-256"
+    },
+    "signature": "<signature_string>"
+  },
+  "encrypted_disclosures": {
+    "ciphertext": "...",
+    "iv": "...",
+    "ephemeralPublicKey": "..."
+  },
+  "metadata": {
+    "_hash_alg": "sha256",
+    "sd_count": 5,
+    "enc": "AES-GCM",
+    "key_agreement": "X25519"
+  }
+}
+```
+
+---
+
+##### Decrypted Disclosure Structure
+
+Disclosures are decrypted on the client device.
+
+```json
+"disclosures": [
+  {
+    "key": "passport_id",
+    "value": "2347BV98FB",
+    "salt": "...",
+    "_digest": "...",
+    "_encoded": "..."
+  },
+  {
+    "key": "expiry_date",
+    "value": "2027-10-09T23:00:00.000Z"
+  },
+  {
+    "key": "first_name",
+    "value": "Nelson"
+  },
+  {
+    "key": "last_name",
+    "value": "Obioma"
+  },
+  {
+    "key": "issuer",
+    "value": { "id": "did:ezrah:<issuer_did>" }
+  }
+]
+```
+
+---
+
+#### Behind the Scenes: Preprocessing
+
+Before sending the request, the SDK:
+
+- Hashes selected claims using `sha256`
+- Encrypts disclosures using `X25519 + AES-GCM`
+- Packs claims into `_sd`
+
+##### Example of Preprocessed Structure
+
+```json
+{
+  "_hash_alg": "sha256",
+  "packedClaims": {
+    "sub": "subject_string_here",
+    "kyc_provider": "DOJAH",
+    "issuanceDate": "2025-05-15T14:23:41.207Z",
+    "_sd": ["<hashed_disclosure_1>", "<hashed_disclosure_2>", ...]
+  },
+  "disclosures": [
+    {
+      "key": "passport_id",
+      "value": "2347BV98FB",
+      "salt": "...",
+      "_digest": "...",
+      "_encoded": "..."
+    },
+    ...
+  ]
+}
+```
+
+---
+
+##### Final Credential Creation API Request
+
+```json
+{
+  "subject": "did:ethr:0x1234...abcd",
+  "issuer": "did:ethr:0xissuer1234...def0",
+  "type": ["VerifiableCredential", "KYCVerifiedCredential"],
+  "issuanceDate": "2025-05-15T13:12:34.468Z",
+  "expirationDate": "2027-10-09T23:00:00.000Z"
+}
+```
+
+---
+
+#### Summary
+
+The EzrahCredsSDK simplifies the issuance of secure, privacy-preserving SD-JWT credentials by handling:
+
+- Claim hashing
+- Selective disclosure
+- Client-side encryption
+
+All while producing verifiable and tamper-proof credentials ready for use in decentralized identity systems.
+
+---
+
 ### Create A Credential Template
 
 Use this method when you want to create a new template structure for your credentials.

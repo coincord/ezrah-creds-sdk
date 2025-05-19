@@ -1,0 +1,77 @@
+Arguments: 
+  /usr/local/bin/node /opt/homebrew/Cellar/yarn/1.22.17_2/libexec/bin/yarn.js add @coincord/sd-jwt-helpers
+
+PATH: 
+  /Users/mozartted/.bun/bin:/opt/homebrew/opt/php@8.1/sbin:/opt/homebrew/opt/php@8.1/bin:/opt/homebrew/opt/php@8.0/sbin:/opt/homebrew/opt/php@8.0/bin:/opt/homebrew/opt/php@8.0/sbin:/opt/homebrew/opt/php@8.0/bin:/opt/homebrew/opt/php@8.0/sbin:/opt/homebrew/opt/php@8.0/bin:/opt/homebrew/opt/php@7.4/sbin:/opt/homebrew/opt/php@7.4/bin:/Library/Java/JavaVirtualMachines/adoptopenjdk-11-openj9.jre/Contents/Home/bin:/opt/local/bin:/opt/local/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/usr/local/go/bin:/Users/mozartted/Library/pnpm:/Users/mozartted/.deno/bin:/Users/mozartted/.bun/bin:/opt/homebrew/opt/php@8.1/sbin:/opt/homebrew/opt/php@8.1/bin:/opt/homebrew/opt/php@8.0/sbin:/opt/homebrew/opt/php@8.0/bin:/opt/homebrew/opt/php@7.4/sbin:/opt/homebrew/opt/php@7.4/bin:/opt/anaconda3/bin:/opt/anaconda3/condabin:/Library/Java/JavaVirtualMachines/adoptopenjdk-11-openj9.jre/Contents/Home/bin:/opt/local/bin:/opt/local/sbin:/Users/mozartted/.cargo/bin:/Applications/Ghostty.app/Contents/MacOS:/Users/mozartted/.fig/bin:/Users/mozartted/.local/bin:/Users/mozartted/Library/Android/sdk/emulator:/Users/mozartted/Library/Android/sdk/tools:/Users/mozartted/Library/Android/sdk/tools/bin:/Users/mozartted/Library/Android/sdk/platform-tools:/Users/mozartted/go/bin:/usr/local/bin:/Users/mozartted/Library/Android/sdk/emulator:/Users/mozartted/Library/Android/sdk/tools:/Users/mozartted/Library/Android/sdk/tools/bin:/Users/mozartted/Library/Android/sdk/platform-tools:/Users/mozartted/go/bin
+
+Yarn version: 
+  1.22.17
+
+Node version: 
+  22.14.0
+
+Platform: 
+  darwin arm64
+
+Trace: 
+  Error: https://npm.pkg.github.com/@coincord%2fsd-jwt-helpers: npm package "sd-jwt-helpers" does not exist under owner "coincord"
+      at params.callback [as _callback] (/opt/homebrew/Cellar/yarn/1.22.17_2/libexec/lib/cli.js:67029:18)
+      at self.callback (/opt/homebrew/Cellar/yarn/1.22.17_2/libexec/lib/cli.js:140883:22)
+      at Request.emit (node:events:518:28)
+      at Request.<anonymous> (/opt/homebrew/Cellar/yarn/1.22.17_2/libexec/lib/cli.js:141855:10)
+      at Request.emit (node:events:518:28)
+      at IncomingMessage.<anonymous> (/opt/homebrew/Cellar/yarn/1.22.17_2/libexec/lib/cli.js:141777:12)
+      at Object.onceWrapper (node:events:632:28)
+      at IncomingMessage.emit (node:events:530:35)
+      at endReadableNT (node:internal/streams/readable:1698:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+
+npm manifest: 
+  {
+    "name": "@coincord/ezrah-creds-sdk",
+    "version": "1.0.0-alpha.3",
+    "description": "A module for managing and manipulating operations with bitcoin, ethereum and litecoin wallets.",
+    "main": "dist/lib/index.js",
+    "type": "module",
+    "publishConfig": {
+      "@coincord:registry": "https://npm.pkg.github.com"
+    },
+    "scripts": {
+      "build": "tsc",
+      "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+      "lint": "eslint 'src/**/*.{ts,tsx}'",
+      "format": "prettier --write 'src/**/*.{ts,tsx,json,md}'",
+      "lint:fix": "eslint 'src/**/*.{ts,tsx}' --fix"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+      "@eslint/js": "^9.24.0",
+      "@types/jest": "^29.5.14",
+      "@types/node": "^22.14.0",
+      "@typescript-eslint/eslint-plugin": "^8.29.1",
+      "@typescript-eslint/parser": "^8.29.1",
+      "eslint": "^9.24.0",
+      "eslint-config-prettier": "^10.1.1",
+      "eslint-plugin-prettier": "^5.2.6",
+      "globals": "^16.0.0",
+      "jest": "^29.7.0",
+      "prettier": "^3.5.3",
+      "ts-jest": "^29.3.1",
+      "ts-node": "^10.9.2",
+      "typescript": "^5.8.3",
+      "typescript-eslint": "^8.29.1"
+    },
+    "dependencies": {
+      "dotenv": "^16.4.7",
+      "graphql": "^16.10.0",
+      "graphql-request": "^7.1.2"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

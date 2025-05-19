@@ -1,6 +1,6 @@
 {
   "name": "@coincord/ezrah-creds-sdk",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.4",
   "description": "A module for managing and manipulating operations with bitcoin, ethereum and litecoin wallets.",
   "main": "dist/lib/index.js",
   "type": "module",
@@ -35,8 +35,13 @@
     "typescript-eslint": "^8.29.1"
   },
   "dependencies": {
+    "@coincord/sd-jwt-helper": "^0.1.0",
+    "@noble/curves": "^1.9.1",
+    "@noble/hashes": "^1.8.0",
+    "@sd-jwt/types": "^0.10.0",
     "dotenv": "^16.4.7",
     "graphql": "^16.10.0",
-    "graphql-request": "^7.1.2"
+    "graphql-request": "^7.1.2",
+    "uuid": "^11.1.0"
   }
 }

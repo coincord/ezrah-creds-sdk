@@ -1,9 +1,11 @@
 import dotenv from 'dotenv';
+import { ed25519 } from '@noble/curves/ed25519';
 dotenv.config();
 
 import { jest } from '@jest/globals';
 import EzrahCredential from '../src/lib';
 import { GraphQLClient } from 'graphql-request';
+import { bytesToHex } from '@noble/curves/abstract/utils';
 
 jest.setTimeout(30000);
 
@@ -107,6 +109,42 @@ describe('Credential', () => {
     console.log(response);
     expect(typeof response?.pending_id).toBe('string');
     expect(typeof response?.url).toBe('string');
+  });
+
+  it('Issue an Encrypted Credential', async () => {
+    const receiverPk = ed25519.utils.randomPrivateKey();
+    const receiverPuk = ed25519.getPublicKey(receiverPk);
+
+    const subjectDid = 'did:ezrah:0xE69A40A839F017148B1B6b36c38036E3936B6531';
+
+    const params: CreateCredentialSDK = {
+      title: 'Emplployee Onboarding',
+      template_claim_id: template_claim_id,
+      claims: {
+        issuance_data: new Date().toISOString(),
+        sub: subjectDid,
+        first_name: 'Lampety',
+        last_name: 'Yamalamala',
+        date_of_birth: '2005-05-15',
+        email: 'laminea.yamal@example.com',
+        phone_number: '+1234567890',
+        address: '123 Main St, Springfield',
+        emergency_contact_name: 'Jane Doe',
+        emergency_contact_phone: '+1987654321',
+        employment_start_date: '2022-01-10',
+        job_title: 'Soccer Player',
+        department: 'Football',
+        background_check_status: 'Cleared',
+        drug_test_result: 'Negative',
+      },
+    };
+    const response = await ezrahCredential.issueEncryptedSDJWT(
+      params.claims,
+      ['first_name', 'last_name', 'date_of_birth', 'email', 'address'],
+      bytesToHex(receiverPuk),
+    );
+
+    expect(typeof response?._encoded).toBe('string');
   });
 
   it('Ceate Verification Model', async () => {

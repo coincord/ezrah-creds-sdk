@@ -202,6 +202,24 @@ declare global {
   interface OrganizationDetails {
     organization: Organization;
   }
+
+  interface PackedRequest {
+    _hash_alg: 'sha256' | 'sha512';
+    packedClaims: {
+      sub: string;
+      issuanceDate: string;
+      _sd: string[];
+      [key: string]: unknown;
+    };
+    encrypted_disclosures: EncryptedDisclosures;
+  }
+
+  interface EncryptedSdjwtResponse {
+    _encoded: string;
+    credential: {
+      [key: string]: unknown;
+    };
+  }
 }
 
 export default {};
