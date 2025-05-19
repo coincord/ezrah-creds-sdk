@@ -33,11 +33,12 @@ jobs:
           scope: '@coincord'
           node-version: 16
           registry-url: https://npm.pkg.github.com/
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - run: npm install
       - run: npm run build
       - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        
   # slackNotification:
   #   name: Slack Notification
   #   runs-on: ubuntu-latest
