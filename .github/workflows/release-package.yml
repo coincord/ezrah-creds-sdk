@@ -18,7 +18,7 @@ jobs:
 
       - name: Configure .npmrc for github packages.
         run: |
-          echo "//npm.pkg.github.com/:_authToken=${{secrets.NPM_TOKEN}}" > ~/.npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{secrets.PACKAGE_TOKEN}}" > ~/.npmrc
 
       - run: npm install
       - run: npm run build
