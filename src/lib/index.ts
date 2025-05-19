@@ -326,7 +326,7 @@ class EzrahCredential {
         },
       );
 
-      return response.createEncryptedSdjwtCredential as EncryptedSdjwtResponse;
+      return response.createEncryptedSdJwtCredential as EncryptedSdjwtResponse;
     } catch (error) {
       throw error;
     }

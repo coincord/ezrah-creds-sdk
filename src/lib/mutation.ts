@@ -98,8 +98,8 @@ export const DELETECREDENTIALWEBHOOK = gql`
 `;
 
 export const CREATE_ENCRYPTED_SDJWT_CREDENTIAL = gql`
-  mutation createEncryptedSdjwtCredential($packedRequest: JSON) {
-    createEncryptedSdjwtCredential(packedRequest: $packedRequest) {
+  mutation createEncryptedSdJwtCredential($packedRequest: JSON) {
+    createEncryptedSdJwtCredential(packedRequest: $packedRequest) {
       _encoded
       credential
     }
