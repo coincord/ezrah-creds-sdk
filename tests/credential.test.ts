@@ -144,7 +144,6 @@ describe('Credential', () => {
       bytesToHex(receiverPuk),
     );
 
-    console.log(response);
     expect(typeof response?._encoded).toBe('string');
   });
 
