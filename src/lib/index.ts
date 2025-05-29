@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { GraphQLClient, GraphQLResponse } from 'graphql-request';
-import graphqlClient from './requester';
+import graphqlClient from './requester.js';
 import {
   ADDCREDENTIALSWEBHOOK,
   CREATE_ENCRYPTED_SDJWT_CREDENTIAL,
@@ -13,7 +13,7 @@ import {
   CREATEVERIFICATIONMODEL,
   DELETECREDENTIALWEBHOOK,
   UPDATECREDENTIALWEBHOOK,
-} from './mutation';
+} from './mutation.js';
 import {
   CREDENTIALANALYTICS,
   CREDENTIALWEBHOOKS,
@@ -23,7 +23,7 @@ import {
   TEMPLATES,
   VERIFICATIONMODELS,
   VERIFICATIONREQUESTS,
-} from './query';
+} from './query.js';
 import { v4 } from 'uuid';
 import { DisclosureFrame } from '@sd-jwt/types';
 import SdJwtHelper from '@coincord/sd-jwt-helper';

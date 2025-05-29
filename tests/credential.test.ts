@@ -1,11 +1,9 @@
 import dotenv from 'dotenv';
-import { ed25519 } from '@noble/curves/ed25519';
 dotenv.config();
 
 import { jest } from '@jest/globals';
 import EzrahCredential from '../src/lib';
 import { GraphQLClient } from 'graphql-request';
-import { bytesToHex } from '@noble/curves/abstract/utils';
 
 jest.setTimeout(30000);
 
