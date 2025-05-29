@@ -3,6 +3,7 @@
   "version": "1.0.0-alpha.4",
   "description": "A module for managing and manipulating operations with bitcoin, ethereum and litecoin wallets.",
   "main": "dist/lib/index.js",
+  "types": "dist/lib/index.d.ts",
   "type": "module",
   "publishConfig": {
     "@coincord:registry": "https://npm.pkg.github.com"
