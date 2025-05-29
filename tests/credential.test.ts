@@ -112,16 +112,16 @@ describe('Credential', () => {
   });
 
   it('Issue an Encrypted Credential', async () => {
-    const receiverPk = ed25519.utils.randomPrivateKey();
-    const receiverPuk = ed25519.getPublicKey(receiverPk);
+    // const receiverPk = ed25519.utils.randomPrivateKey();
+    // const receiverPuk = ed25519.getPublicKey(receiverPk);
 
-    const subjectDid = 'did:ezrah:0xE69A40A839F017148B1B6b36c38036E3936B6531';
+    const subjectDid = 'did:ezrah:0x32511ABa1630f5526669d57325611A68aA240127';
 
     const params: CreateCredentialSDK = {
       title: 'Emplployee Onboarding',
       template_claim_id: template_claim_id,
       claims: {
-        issuance_data: new Date().toISOString(),
+        issuance_date: new Date().toISOString(),
         sub: subjectDid,
         first_name: 'Lampety',
         last_name: 'Yamalamala',
@@ -140,9 +140,23 @@ describe('Credential', () => {
     };
     const response = await ezrahCredential.issueEncryptedSDJWT(
       params.claims,
-      ['first_name', 'last_name', 'date_of_birth', 'email', 'address'],
-      bytesToHex(receiverPuk),
+      [
+        'first_name',
+        'last_name',
+        'date_of_birth',
+        'email',
+        'address',
+        'job_title',
+        'emergency_contact_name',
+        'emergency_contact_phone',
+        'background_check_status',
+      ],
+      'efdedfabd5db14876e28b8a920a63455736e2f2d8a85bee37db9c8381068534b',
+
+      // bytesToHex(receiverPuk),
     );
+
+    console.log('Issue creds response', response);
 
     expect(typeof response?._encoded).toBe('string');
   });
