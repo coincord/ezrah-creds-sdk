@@ -7,6 +7,7 @@ import graphqlClient from './requester.js';
 import {
   ADDCREDENTIALSWEBHOOK,
   CREATE_ENCRYPTED_SDJWT_CREDENTIAL,
+  CREATE_REQUEST_MEDIATOR_MESSAGE,
   CREATECREDENTIALS,
   CREATECREDENTIALSDK,
   CREATETEMPLATESTRUCTURE,
@@ -125,6 +126,28 @@ class EzrahCredential {
       }
 
       return response.addCredentialsWebhook as CredentialsWebhookResponse;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async createRequestMessage(params: CreateRequestMediatorMessage): Promise<boolean | null> {
+    try {
+      const response: GraphQLResponse = await graphqlClient.request(
+        CREATE_REQUEST_MEDIATOR_MESSAGE,
+        {
+          source: params.source,
+          oob_code: params.oob_code,
+          message: params.message,
+          reciever_did: params.reciever_did,
+        },
+      );
+
+      if (!response?.createRequestMediatorMessage) {
+        throw new Error('Error occurs while adding sending request message');
+      }
+
+      return response.createRequestMediatorMessage as boolean;
     } catch (error) {
       throw error;
     }

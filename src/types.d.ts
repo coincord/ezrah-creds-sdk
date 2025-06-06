@@ -138,6 +138,13 @@ declare global {
     webhook_url: string;
   }
 
+  interface CreateRequestMediatorMessage {
+    oob_code?: string;
+    source?: string;
+    message: string;
+    reciever_did: string;
+  }
+
   interface CredentialsWebhookResponse {
     id: string;
     name: string;
