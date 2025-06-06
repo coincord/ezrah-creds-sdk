@@ -60,6 +60,22 @@ export const CREATEVERIFICATIONMODEL = gql`
   }
 `;
 
+export const CREATE_REQUEST_MEDIATOR_MESSAGE = gql`
+  mutation createRequestMediatorMessage(
+    $oob_code: String
+    $source: String
+    $message: String
+    $reciever_did: String
+  ) {
+    createRequestMediatorMessage(
+      oob_code: $oob_code
+      source: $source
+      message: $message
+      reciever_did: $reciever_did
+    )
+  }
+`;
+
 // WEBHOOKs
 export const ADDCREDENTIALSWEBHOOK = gql`
   mutation AddCredentialsWebhook($request_key: String!, $name: String!, $webhook_url: String!) {
