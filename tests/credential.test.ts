@@ -285,7 +285,7 @@ describe('Credential', () => {
   // });
 
   it('List Verification Models', async () => {
-    const response = await ezrahCredential.verifcationModel();
+    const response = await ezrahCredential.verificationModel();
 
     expect(response?.length).toBeGreaterThan(0);
     expect(typeof response).toBe('object');
@@ -297,7 +297,7 @@ describe('Credential', () => {
   });
 
   it('Verification Request', async () => {
-    const response = await ezrahCredential.verifcationRequests(verificationModelID);
+    const response = await ezrahCredential.verificationRequests(verificationModelID);
 
     expect(typeof response)?.toBe('object');
   });

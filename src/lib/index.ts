@@ -258,7 +258,7 @@ class EzrahCredential {
     }
   }
 
-  async verifcationModel(): Promise<VerificationModel[] | null> {
+  async verificationModel(): Promise<VerificationModel[] | null> {
     try {
       const response: GraphQLResponse = await graphqlClient.request(VERIFICATIONMODELS);
 
@@ -272,7 +272,7 @@ class EzrahCredential {
     }
   }
 
-  async verifcationRequests(params: string): Promise<VerificationRequest[] | null> {
+  async verificationRequests(params: string): Promise<VerificationRequest[] | null> {
     try {
       const response: GraphQLResponse = await graphqlClient.request(VERIFICATIONREQUESTS, {
         verification_model: params,
