@@ -60,6 +60,48 @@ export const CREATEVERIFICATIONMODEL = gql`
   }
 `;
 
+export const CREATEAUTHVERIFICATIONMODEL = gql`
+  mutation CreateAuthVerificationModel(
+    $title: String!
+    $purpose: String!
+    $claims_match: String!
+    $isser_match: String!
+    $client_id: String!
+    $client_secret: String!
+    $callback: String
+    $custom_url_scheme: String
+    $oob_prefix: String
+    $session_duration: String
+    $manual_verification: Boolean!
+  ) {
+    createAuthVerificationModel(
+      title: $title
+      purpose: $purpose
+      claims_match: $claims_match
+      isser_match: $isser_match
+      manual_verification: $manual_verification
+      client_id: $client_id
+      client_secret: $client_secret
+      callback: $callback
+      custom_url_scheme: $custom_url_scheme
+      oob_prefix: $oob_prefix
+      session_duration: $session_duration
+    ) {
+      id
+      title
+      verification_title
+      purpose
+      verification_link
+      manual_verification
+      issuer_match
+      claims_match
+      client_id
+      client_secret
+      created_at
+    }
+  }
+`;
+
 export const CREATE_REQUEST_MEDIATOR_MESSAGE = gql`
   mutation createRequestMediatorMessage(
     $oob_code: String

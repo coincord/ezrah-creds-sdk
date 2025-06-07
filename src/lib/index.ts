@@ -8,6 +8,7 @@ import {
   ADDCREDENTIALSWEBHOOK,
   CREATE_ENCRYPTED_SDJWT_CREDENTIAL,
   CREATE_REQUEST_MEDIATOR_MESSAGE,
+  CREATEAUTHVERIFICATIONMODEL,
   CREATECREDENTIALS,
   CREATECREDENTIALSDK,
   CREATETEMPLATESTRUCTURE,
@@ -100,6 +101,33 @@ class EzrahCredential {
         claims_match: params.claims_match,
         isser_match: params.isser_match,
         manual_verification: params.manual_verification,
+      });
+
+      if (!response?.createVerificationModel) {
+        throw new Error('Error occurs while creating verification model');
+      }
+      return response.createVerificationModel as VerificationModel;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async createAuthVerificationModel(
+    params: CreateAuthVerificationModel,
+  ): Promise<VerificationModel | null> {
+    try {
+      const response: GraphQLResponse = await graphqlClient.request(CREATEAUTHVERIFICATIONMODEL, {
+        title: params.title,
+        purpose: params.purpose,
+        claims_match: params.claims_match,
+        isser_match: params.isser_match,
+        manual_verification: params.manual_verification,
+        client_id: params.client_id,
+        client_secret: params.client_seceret,
+        oob_prefix: params.oob_prefix,
+        callback: params.callback,
+        custom_url_scheme: params.custom_url_scheme,
+        session_duration: params.session_duration,
       });
 
       if (!response?.createVerificationModel) {
