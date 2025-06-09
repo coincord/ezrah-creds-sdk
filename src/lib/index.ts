@@ -30,6 +30,9 @@ import { v4 } from 'uuid';
 import { DisclosureFrame } from '@sd-jwt/types';
 import SdJwtHelper from '@coincord/sd-jwt-helper';
 
+/**
+ *  Ezrah Credential
+ */
 class EzrahCredential {
   private client: GraphQLClient;
 
