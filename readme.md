@@ -354,7 +354,7 @@ const model = await ezrah.createVerificationModel({
   title: 'Employee Verification',
   purpose: 'Verify employee credentials',
   claims_match: { department: 'Engineering' },
-  isser_match: 'issuer123',
+  issuer_match: 'issuer123',
   manual_verification: false,
 });
 ```

@@ -44,7 +44,7 @@ export const CREATEVERIFICATIONMODEL = gql`
       title: $title
       purpose: $purpose
       claims_match: $claims_match
-      issuer_match: $isser_match
+      issuer_match: $issuer_match
       manual_verification: $manual_verification
     ) {
       id
@@ -78,7 +78,7 @@ export const CREATEAUTHVERIFICATIONMODEL = gql`
       title: $title
       purpose: $purpose
       claims_match: $claims_match
-      issuer_match: $isser_match
+      issuer_match: $issuer_match
       manual_verification: $manual_verification
       client_id: $client_id
       client_secret: $client_secret

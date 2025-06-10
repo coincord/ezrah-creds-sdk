@@ -164,7 +164,7 @@ describe('Credential', () => {
       title: 'Employee Freelancing',
       purpose: 'Freelance Employee',
       claims_match: `name, age, date_of_birth, jobtype, description`,
-      isser_match: organizationDID,
+      issuer_match: organizationDID,
       manual_verification: true,
     };
 
@@ -179,7 +179,7 @@ describe('Credential', () => {
   it('Add Webhook - One', async () => {
     const params: CreateCredentialsWebhook = {
       request_key: organizationAPIKey,
-      name: 'Behold the hour is at hands',
+      name: 'Webhook 1',
       webhook_url: 'https://example.com/hour/at/hand',
     };
 
