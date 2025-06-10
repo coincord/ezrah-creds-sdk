@@ -94,8 +94,17 @@ declare global {
     title: string;
     purpose: string;
     claims_match: string;
-    isser_match: string;
+    issuer_match: string;
     manual_verification: boolean;
+  }
+
+  interface CreateAuthVerificationModel extends CreateVerificationModel {
+    client_id: string;
+    client_seceret: string;
+    callback?: string;
+    custom_url_scheme?: string;
+    oob_prefix?: string;
+    session_duration: number;
   }
 
   interface VerificationModel {

@@ -8,6 +8,7 @@ import {
   ADDCREDENTIALSWEBHOOK,
   CREATE_ENCRYPTED_SDJWT_CREDENTIAL,
   CREATE_REQUEST_MEDIATOR_MESSAGE,
+  CREATEAUTHVERIFICATIONMODEL,
   CREATECREDENTIALS,
   CREATECREDENTIALSDK,
   CREATETEMPLATESTRUCTURE,
@@ -29,6 +30,9 @@ import { v4 } from 'uuid';
 import { DisclosureFrame } from '@sd-jwt/types';
 import SdJwtHelper from '@coincord/sd-jwt-helper';
 
+/**
+ *  Ezrah Credential
+ */
 class EzrahCredential {
   private client: GraphQLClient;
 
@@ -98,8 +102,35 @@ class EzrahCredential {
         title: params.title,
         purpose: params.purpose,
         claims_match: params.claims_match,
-        isser_match: params.isser_match,
+        issuer_match: params.issuer_match,
         manual_verification: params.manual_verification,
+      });
+
+      if (!response?.createVerificationModel) {
+        throw new Error('Error occurs while creating verification model');
+      }
+      return response.createVerificationModel as VerificationModel;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async createAuthVerificationModel(
+    params: CreateAuthVerificationModel,
+  ): Promise<VerificationModel | null> {
+    try {
+      const response: GraphQLResponse = await graphqlClient.request(CREATEAUTHVERIFICATIONMODEL, {
+        title: params.title,
+        purpose: params.purpose,
+        claims_match: params.claims_match,
+        issuer_match: params.issuer_match,
+        manual_verification: params.manual_verification,
+        client_id: params.client_id,
+        client_secret: params.client_seceret,
+        oob_prefix: params.oob_prefix,
+        callback: params.callback,
+        custom_url_scheme: params.custom_url_scheme,
+        session_duration: params.session_duration,
       });
 
       if (!response?.createVerificationModel) {
@@ -258,7 +289,7 @@ class EzrahCredential {
     }
   }
 
-  async verifcationModel(): Promise<VerificationModel[] | null> {
+  async verificationModel(): Promise<VerificationModel[] | null> {
     try {
       const response: GraphQLResponse = await graphqlClient.request(VERIFICATIONMODELS);
 
@@ -272,7 +303,7 @@ class EzrahCredential {
     }
   }
 
-  async verifcationRequests(params: string): Promise<VerificationRequest[] | null> {
+  async verificationRequests(params: string): Promise<VerificationRequest[] | null> {
     try {
       const response: GraphQLResponse = await graphqlClient.request(VERIFICATIONREQUESTS, {
         verification_model: params,
