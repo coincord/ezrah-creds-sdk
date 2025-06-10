@@ -102,7 +102,7 @@ class EzrahCredential {
         title: params.title,
         purpose: params.purpose,
         claims_match: params.claims_match,
-        isser_match: params.isser_match,
+        issuer_match: params.issuer_match,
         manual_verification: params.manual_verification,
       });
 
@@ -123,7 +123,7 @@ class EzrahCredential {
         title: params.title,
         purpose: params.purpose,
         claims_match: params.claims_match,
-        isser_match: params.isser_match,
+        issuer_match: params.issuer_match,
         manual_verification: params.manual_verification,
         client_id: params.client_id,
         client_secret: params.client_seceret,

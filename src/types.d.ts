@@ -94,7 +94,7 @@ declare global {
     title: string;
     purpose: string;
     claims_match: string;
-    isser_match: string;
+    issuer_match: string;
     manual_verification: boolean;
   }
 

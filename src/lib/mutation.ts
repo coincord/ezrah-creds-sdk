@@ -37,14 +37,14 @@ export const CREATEVERIFICATIONMODEL = gql`
     $title: String!
     $purpose: String!
     $claims_match: String!
-    $isser_match: String!
+    $issuer_match: String!
     $manual_verification: Boolean!
   ) {
     createVerificationModel(
       title: $title
       purpose: $purpose
       claims_match: $claims_match
-      isser_match: $isser_match
+      issuer_match: $isser_match
       manual_verification: $manual_verification
     ) {
       id
@@ -65,7 +65,7 @@ export const CREATEAUTHVERIFICATIONMODEL = gql`
     $title: String!
     $purpose: String!
     $claims_match: String!
-    $isser_match: String!
+    $issuer_match: String!
     $client_id: String!
     $client_secret: String!
     $callback: String
@@ -78,7 +78,7 @@ export const CREATEAUTHVERIFICATIONMODEL = gql`
       title: $title
       purpose: $purpose
       claims_match: $claims_match
-      isser_match: $isser_match
+      issuer_match: $isser_match
       manual_verification: $manual_verification
       client_id: $client_id
       client_secret: $client_secret
