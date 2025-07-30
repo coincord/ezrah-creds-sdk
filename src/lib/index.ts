@@ -126,14 +126,14 @@ class EzrahCredential {
         issuer_match: params.issuer_match,
         manual_verification: params.manual_verification,
         client_id: params.client_id,
-        client_secret: params.client_seceret,
+        client_secret: params.client_secret,
         oob_prefix: params.oob_prefix,
         callback: params.callback,
         custom_url_scheme: params.custom_url_scheme,
         session_duration: params.session_duration,
       });
 
-      if (!response?.createVerificationModel) {
+      if (!response?.createAuthVerificationModel) {
         throw new Error('Error occurs while creating verification model');
       }
       return response.createVerificationModel as VerificationModel;
