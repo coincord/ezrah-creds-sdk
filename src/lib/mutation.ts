@@ -62,17 +62,17 @@ export const CREATEVERIFICATIONMODEL = gql`
 
 export const CREATEAUTHVERIFICATIONMODEL = gql`
   mutation CreateAuthVerificationModel(
-    $title: String!
-    $purpose: String!
-    $claims_match: String!
-    $issuer_match: String!
-    $client_id: String!
-    $client_secret: String!
+    $title: String
+    $purpose: String
+    $claims_match: String
+    $issuer_match: String
+    $client_id: String
+    $client_secret: String
     $callback: String
     $custom_url_scheme: String
     $oob_prefix: String
     $session_duration: String
-    $manual_verification: Boolean!
+    $manual_verification: Boolean
   ) {
     createAuthVerificationModel(
       title: $title
@@ -97,7 +97,6 @@ export const CREATEAUTHVERIFICATIONMODEL = gql`
       claims_match
       client_id
       client_secret
-      created_at
     }
   }
 `;

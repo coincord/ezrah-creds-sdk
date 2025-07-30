@@ -98,13 +98,27 @@ declare global {
     manual_verification: boolean;
   }
 
+  interface AuthVerificationModel {
+    title: string;
+    purpose: string;
+    claims_match: string;
+    issuer_match: string;
+    manual_verification: boolean;
+    client_id: string;
+    client_secret: string;
+    callback: string | null;
+    custom_url_scheme: null | string;
+    oob_prefix: string;
+    session_duration: string;
+  }
+
   interface CreateAuthVerificationModel extends CreateVerificationModel {
     client_id: string;
-    client_seceret: string;
+    client_secret: string;
     callback?: string;
     custom_url_scheme?: string;
     oob_prefix?: string;
-    session_duration: number;
+    session_duration: string;
   }
 
   interface VerificationModel {

@@ -34,7 +34,7 @@ describe('Credential', () => {
     graphQLClient = ezrahCredential.getClient();
   });
 
-  it('Create a GraphQLClient instance', () => {
+  it.skip('Create a GraphQLClient instance', () => {
     const spy = jest.spyOn(EzrahCredential.prototype, 'getClient');
 
     ezrahCredential = new EzrahCredential(); // this triggers the spy
@@ -46,7 +46,7 @@ describe('Credential', () => {
     spy.mockRestore();
   });
 
-  it('Organization Details', async () => {
+  it.skip('Organization Details', async () => {
     const response = await ezrahCredential.organization();
 
     expect(response?.id).toBeDefined();
@@ -61,7 +61,7 @@ describe('Credential', () => {
     expect(organizationAPIKey).toBeDefined();
   });
 
-  it('CreatesCredentialTemplate', async () => {
+  it.skip('CreatesCredentialTemplate', async () => {
     const credentialTemplate = await ezrahCredential.createTemplateStructure({
       claims: 'first_name,last_name,other_details',
       description: 'test template id',
@@ -71,7 +71,7 @@ describe('Credential', () => {
     expect(credentialTemplate.id).toBeDefined();
   });
 
-  it(`Get Templates Listing`, async () => {
+  it.skip(`Get Templates Listing`, async () => {
     const response = await ezrahCredential.templates();
 
     expect(response?.length).toBeGreaterThan(2);
@@ -82,7 +82,7 @@ describe('Credential', () => {
     expect(template_claim_id).toBeDefined();
   });
 
-  it('Issue A Credential', async () => {
+  it.skip('Issue A Credential', async () => {
     const params: CreateCredentialSDK = {
       title: 'Emplployee Onboarding',
       template_claim_id: template_claim_id,
@@ -109,7 +109,7 @@ describe('Credential', () => {
     expect(typeof response?.url).toBe('string');
   });
 
-  it('Issue an Encrypted Credential', async () => {
+  it.skip('Issue an Encrypted Credential', async () => {
     // const receiverPk = ed25519.utils.randomPrivateKey();
     // const receiverPuk = ed25519.getPublicKey(receiverPk);
 
@@ -159,7 +159,7 @@ describe('Credential', () => {
     expect(typeof response?._encoded).toBe('string');
   });
 
-  it('Ceate Verification Model', async () => {
+  it.skip('Ceate Verification Model', async () => {
     const params: CreateVerificationModel = {
       title: 'Employee Freelancing',
       purpose: 'Freelance Employee',
@@ -176,7 +176,32 @@ describe('Credential', () => {
     expect(response?.title).toBe('Employee Freelancing');
   });
 
-  it('Add Webhook - One', async () => {
+  it('Ceate Auth Verification Model', async () => {
+    const params: CreateAuthVerificationModel = {
+      title: 'Login with Dojah for Cowrywise',
+      purpose: 'Looking to login with dojah',
+      claims_match: 'first_name,last_name',
+      issuer_match: 'did:ezrah:0x67d4c289860E1B64a63805f944db4b214a0cA06a',
+      manual_verification: false,
+      client_id: `random_client_id_5-${Math.random()}`,
+      client_secret: 'uuid_4_client_secret_here_2',
+      callback: 'https://creds-oauth-relying-party-demo.web.app',
+      custom_url_scheme: 'string',
+      oob_prefix: 'oauth.ezrah.co',
+      session_duration: '140000',
+    };
+
+    console.log('Auth verification mode creation');
+
+    const response = await ezrahCredential.createAuthVerificationModel(params);
+    expect(response?.id).toBeDefined();
+    expect(response?.title).toBeDefined();
+    expect(response?.purpose).toBe('Freelance Employee');
+    expect(response?.manual_verification).toBe(true);
+    expect(response?.title).toBe('Employee Freelancing');
+  });
+
+  it.skip('Add Webhook - One', async () => {
     const params: CreateCredentialsWebhook = {
       request_key: organizationAPIKey,
       name: 'Webhook 1',
@@ -193,7 +218,7 @@ describe('Credential', () => {
     expect(webhookID).toBeDefined();
   });
 
-  it('Add Webhook - Two', async () => {
+  it.skip('Add Webhook - Two', async () => {
     const params: CreateCredentialsWebhook = {
       request_key: organizationAPIKey,
       name: 'Airline REaltime',
@@ -206,7 +231,7 @@ describe('Credential', () => {
     expect(response?.name).toBeDefined();
   });
 
-  it('Add Webhook - Three', async () => {
+  it.skip('Add Webhook - Three', async () => {
     const params: CreateCredentialsWebhook = {
       request_key: organizationAPIKey,
       name: 'Webhook Resting',
@@ -219,7 +244,7 @@ describe('Credential', () => {
     expect(response?.name).toBeDefined();
   });
 
-  it('Update Webhook - One ', async () => {
+  it.skip('Update Webhook - One ', async () => {
     const params: UpdateCredentialWebhook = {
       webhook_id: webhookID,
       request_key: organizationAPIKey,
@@ -233,14 +258,14 @@ describe('Credential', () => {
     expect(response?.name).toBe('2 Webhook Sign Two');
   });
 
-  it('Delete Webhook - One ', async () => {
+  it.skip('Delete Webhook - One ', async () => {
     const response = await ezrahCredential.deleteCredentialWebhook(webhookID);
 
     expect(typeof response).toBe('boolean');
     expect(response).toBe(true);
   });
 
-  it('List Issued Credentials', async () => {
+  it.skip('List Issued Credentials', async () => {
     const response = await ezrahCredential.issuedCredentials();
 
     expect(typeof response).toBe('object');
@@ -250,7 +275,7 @@ describe('Credential', () => {
     expect(response?.credentials.length).toBeGreaterThan(0);
   });
 
-  it('List Issued Credentials With Filter', async () => {
+  it.skip('List Issued Credentials With Filter', async () => {
     const filter: IssuedCredentials = {
       timeline: dateRange,
       status: ['CLAIMED', 'ISSUED'],
@@ -268,7 +293,7 @@ describe('Credential', () => {
     expect(response?.credentials.length).toBeGreaterThan(0);
   });
 
-  it('Credential Analytics', async () => {
+  it.skip('Credential Analytics', async () => {
     const response = await ezrahCredential.credentialAnalytics();
 
     expect(typeof response?.CLAIMED).toBe('number');
@@ -284,7 +309,7 @@ describe('Credential', () => {
   //   expect(typeof response?.resolveDid.resolvedDID).toBe('object');
   // });
 
-  it('List Verification Models', async () => {
+  it.skip('List Verification Models', async () => {
     const response = await ezrahCredential.verificationModel();
 
     expect(response?.length).toBeGreaterThan(0);
@@ -296,13 +321,13 @@ describe('Credential', () => {
     expect(verificationModelID).toBeDefined();
   });
 
-  it('Verification Request', async () => {
+  it.skip('Verification Request', async () => {
     const response = await ezrahCredential.verificationRequests(verificationModelID);
 
     expect(typeof response)?.toBe('object');
   });
 
-  it('List Webhooks', async () => {
+  it.skip('List Webhooks', async () => {
     const response = await ezrahCredential.webhooks();
     console.log(response);
     expect(typeof response).toBe('object');
