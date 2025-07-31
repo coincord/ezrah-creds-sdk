@@ -133,6 +133,20 @@ declare global {
     created_at: string;
   }
 
+  interface AuthVerificationModel {
+    id: string;
+    title: string;
+    purpose: string;
+    verification_link: string;
+    manual_verification: boolean;
+    issuer_match: string;
+    claims_match: string;
+    verification_title: string;
+    created_at: string;
+    client_id: string;
+    client_secret: string;
+  }
+
   export interface CreateVerificationModelRes {
     createVerificationModel: VerificationModel;
   }
