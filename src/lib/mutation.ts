@@ -106,11 +106,13 @@ export const CREATE_REQUEST_MEDIATOR_MESSAGE = gql`
     $oob_code: String
     $source: String
     $message: String
+    $session_code: String
     $reciever_did: String
   ) {
     createRequestMediatorMessage(
       oob_code: $oob_code
       source: $source
+      session_code: $session_code
       message: $message
       reciever_did: $reciever_did
     )

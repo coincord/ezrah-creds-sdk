@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { GraphQLClient, GraphQLResponse } from 'graphql-request';
+
+// OPTIMIZE: Ignorable error appears here in jest testing env, with regard to ESM module import, resolve soon
 import graphqlClient from './requester.js';
 import {
   ADDCREDENTIALSWEBHOOK,
@@ -49,12 +51,12 @@ class EzrahCredential {
       const response: GraphQLResponse = await graphqlClient.request(CREATECREDENTIALS, {
         claimID: params.claimID,
         did: params.did,
-        claims: params.claims,
+        claims: typeof params.claims == 'string' ? params.claimID : JSON.stringify(params.claims),
       });
-      if (!response?.data) {
+      if (!response?.createCredential) {
         throw new Error('Error occurs while issuing credential');
       }
-      return response.data as VCredential;
+      return response.createCredential as VCredential;
     } catch (error) {
       throw error;
     }
@@ -171,6 +173,7 @@ class EzrahCredential {
           oob_code: params.oob_code,
           message: params.message,
           reciever_did: params.reciever_did,
+          session_code: params.session_code,
         },
       );
 
@@ -289,7 +292,7 @@ class EzrahCredential {
     }
   }
 
-  async verificationModel(): Promise<VerificationModel[] | null> {
+  async verificationModels(): Promise<VerificationModel[] | null> {
     try {
       const response: GraphQLResponse = await graphqlClient.request(VERIFICATIONMODELS);
 

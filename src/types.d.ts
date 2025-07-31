@@ -178,6 +178,7 @@ declare global {
   interface CreateRequestMediatorMessage {
     oob_code?: string;
     source?: string;
+    session_code?: string;
     message: string;
     reciever_did: string;
   }

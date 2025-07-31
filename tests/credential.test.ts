@@ -82,7 +82,7 @@ describe('Credential', () => {
     expect(template_claim_id).toBeDefined();
   });
 
-  it.skip('Issue A Credential', async () => {
+  it('Issue A Credential', async () => {
     const params: CreateCredentialSDK = {
       title: 'Emplployee Onboarding',
       template_claim_id: template_claim_id,
@@ -203,6 +203,21 @@ describe('Credential', () => {
     // expect(response?.title).toBe('Employee Freelancing');
   });
 
+  it('Create Request Message', async () => {
+    const params: CreateRequestMediatorMessage = {
+      source: 'Cowrywise wants to login',
+      oob_code: 'ejY2df9f3bf389d89b82b38d2b',
+      message: 'Login with partner',
+      session_code: 'request_mediator_session_code',
+      reciever_did: 'did:ezrah:0x67d4c289860E1B64a63805f944db4b214a0cA06a',
+    };
+    console.log('Request mediator mode creation');
+
+    const response = await ezrahCredential.createRequestMessage(params);
+    console.log(response);
+    expect(response).toBeTruthy();
+  });
+
   it.skip('Add Webhook - One', async () => {
     const params: CreateCredentialsWebhook = {
       request_key: organizationAPIKey,
@@ -312,7 +327,7 @@ describe('Credential', () => {
   // });
 
   it.skip('List Verification Models', async () => {
-    const response = await ezrahCredential.verificationModel();
+    const response = await ezrahCredential.verificationModels();
 
     expect(response?.length).toBeGreaterThan(0);
     expect(typeof response).toBe('object');
