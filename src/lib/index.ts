@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { GraphQLClient, GraphQLResponse } from 'graphql-request';
+
+// OPTIMIZE: Ignorable error appears here in jest testing env, with regard to ESM module import, resolve soon
 import graphqlClient from './requester.js';
 import {
   ADDCREDENTIALSWEBHOOK,
