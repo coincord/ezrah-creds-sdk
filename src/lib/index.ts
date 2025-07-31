@@ -117,7 +117,7 @@ class EzrahCredential {
 
   async createAuthVerificationModel(
     params: CreateAuthVerificationModel,
-  ): Promise<VerificationModel | null> {
+  ): Promise<AuthVerificationModel | null> {
     try {
       const response: GraphQLResponse = await graphqlClient.request(CREATEAUTHVERIFICATIONMODEL, {
         title: params.title,
@@ -136,7 +136,7 @@ class EzrahCredential {
       if (!response?.createAuthVerificationModel) {
         throw new Error('Error occurs while creating verification model');
       }
-      return response.createVerificationModel as VerificationModel;
+      return response.createAuthVerificationModel as AuthVerificationModel;
     } catch (error) {
       throw error;
     }
