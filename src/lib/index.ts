@@ -171,6 +171,7 @@ class EzrahCredential {
           oob_code: params.oob_code,
           message: params.message,
           reciever_did: params.reciever_did,
+          session_code: params.session_code,
         },
       );
 
