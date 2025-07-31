@@ -49,12 +49,12 @@ class EzrahCredential {
       const response: GraphQLResponse = await graphqlClient.request(CREATECREDENTIALS, {
         claimID: params.claimID,
         did: params.did,
-        claims: params.claims,
+        claims: typeof params.claims == 'string' ? params.claimID : JSON.stringify(params.claims),
       });
-      if (!response?.data) {
+      if (!response?.createCredential) {
         throw new Error('Error occurs while issuing credential');
       }
-      return response.data as VCredential;
+      return response.createCredential as VCredential;
     } catch (error) {
       throw error;
     }
@@ -289,7 +289,7 @@ class EzrahCredential {
     }
   }
 
-  async verificationModel(): Promise<VerificationModel[] | null> {
+  async verificationModels(): Promise<VerificationModel[] | null> {
     try {
       const response: GraphQLResponse = await graphqlClient.request(VERIFICATIONMODELS);
 

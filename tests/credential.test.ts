@@ -82,7 +82,7 @@ describe('Credential', () => {
     expect(template_claim_id).toBeDefined();
   });
 
-  it.skip('Issue A Credential', async () => {
+  it('Issue A Credential', async () => {
     const params: CreateCredentialSDK = {
       title: 'Emplployee Onboarding',
       template_claim_id: template_claim_id,
