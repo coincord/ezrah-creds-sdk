@@ -1,4 +1,6 @@
 declare global {
+  type PolicyStateEnum = 'REVOKE' | 'SUSPEND' | 'EXPIRY';
+
   // CREDENTIALS
   interface Identifier {
     id: string;
@@ -10,6 +12,12 @@ declare global {
     claimID: string;
     did: string;
     claims: string;
+  }
+
+  interface PolicyUpdateCredentialParams {
+    credential_urn: string;
+    action: PolicyStateEnum;
+    state: boolean;
   }
 
   interface VCredential {
@@ -261,6 +269,7 @@ declare global {
 
   interface EncryptedSdjwtResponse {
     _encoded: string;
+    urn?: string;
     credential: {
       [key: string]: unknown;
     };

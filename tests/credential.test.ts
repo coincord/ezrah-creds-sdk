@@ -17,6 +17,7 @@ describe('Credential', () => {
   // const testlogo = new File(['dummy content'], 'testlogo.png', { type: 'image/png' });
   let verificationModelID: string;
 
+  let credential_urn: string | null;
   const dateRange = (() => {
     const now = new Date();
     const past = new Date();
@@ -71,7 +72,7 @@ describe('Credential', () => {
     expect(credentialTemplate.id).toBeDefined();
   });
 
-  it.skip(`Get Templates Listing`, async () => {
+  it(`Get Templates Listing`, async () => {
     const response = await ezrahCredential.templates();
 
     expect(response?.length).toBeGreaterThan(2);
@@ -109,7 +110,7 @@ describe('Credential', () => {
     expect(typeof response?.url).toBe('string');
   });
 
-  it.skip('Issue an Encrypted Credential', async () => {
+  it('Issue an Encrypted Credential', async () => {
     // const receiverPk = ed25519.utils.randomPrivateKey();
     // const receiverPuk = ed25519.getPublicKey(receiverPk);
 
@@ -150,13 +151,29 @@ describe('Credential', () => {
         'background_check_status',
       ],
       'efdedfabd5db14876e28b8a920a63455736e2f2d8a85bee37db9c8381068534b',
-
+      {
+        policy_control: true,
+      },
       // bytesToHex(receiverPuk),
     );
+
+    credential_urn = response.urn as string;
 
     console.log('Issue creds response', response);
 
     expect(typeof response?._encoded).toBe('string');
+  });
+
+  it('Change the state of the credential', async () => {
+    console.log('The Credential URN : ', credential_urn);
+    const response = await ezrahCredential.policyControlCredential({
+      credential_urn: credential_urn as string,
+      action: 'REVOKE',
+      state: true,
+    });
+
+    console.log(response);
+    expect(response).toBeTruthy();
   });
 
   it.skip('Ceate Verification Model', async () => {
