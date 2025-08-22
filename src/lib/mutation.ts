@@ -42,6 +42,16 @@ export const CREATECREDENTIALSDK = gql`
   }
 `;
 
+export const POLICY_CONTROL_MUTATION = gql`
+  mutation PolicyUpdateCredential(
+    $credential_urn: String
+    $action: PolicyStateEnum
+    $state: Boolean
+  ) {
+    policyUpdateCredential(credential_urn: $credential_urn, action: $action, state: $state)
+  }
+`;
+
 // VERIFICATION MODELS
 export const CREATEVERIFICATIONMODEL = gql`
   mutation CreateVerificationModel(

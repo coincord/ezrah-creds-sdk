@@ -16,6 +16,7 @@ import {
   CREATETEMPLATESTRUCTURE,
   CREATEVERIFICATIONMODEL,
   DELETECREDENTIALWEBHOOK,
+  POLICY_CONTROL_MUTATION,
   UPDATECREDENTIALWEBHOOK,
 } from './mutation.js';
 import {
@@ -87,7 +88,6 @@ class EzrahCredential {
     },
   ): Promise<CredentialSDKResponse | null> {
     try {
-      console.log('Template ID', params.template_claim_id);
       const response: GraphQLResponse = await graphqlClient.request(CREATECREDENTIALSDK, {
         title: params.title,
         template_claim_id: params.template_claim_id,
@@ -98,6 +98,22 @@ class EzrahCredential {
         throw new Error('Error occurs while issuing credential');
       }
       return response.createCredentialSDK as CredentialSDKResponse;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async policyControlCredential(params: PolicyUpdateCredentialParams): Promise<boolean> {
+    try {
+      const response: GraphQLResponse = await graphqlClient.request(POLICY_CONTROL_MUTATION, {
+        credential_urn: params.credential_urn,
+        action: params.action,
+        state: params.state,
+      });
+      if (!response?.policyUpdateCredential) {
+        throw new Error('Error occurs while issuing credential');
+      }
+      return response.policyUpdateCredential as boolean;
     } catch (error) {
       throw error;
     }

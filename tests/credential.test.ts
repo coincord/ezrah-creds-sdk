@@ -17,6 +17,7 @@ describe('Credential', () => {
   // const testlogo = new File(['dummy content'], 'testlogo.png', { type: 'image/png' });
   let verificationModelID: string;
 
+  let credential_urn: string | null;
   const dateRange = (() => {
     const now = new Date();
     const past = new Date();
@@ -156,9 +157,23 @@ describe('Credential', () => {
       // bytesToHex(receiverPuk),
     );
 
+    credential_urn = response.urn as string;
+
     console.log('Issue creds response', response);
 
     expect(typeof response?._encoded).toBe('string');
+  });
+
+  it('Change the state of the credential', async () => {
+    console.log('The Credential URN : ', credential_urn);
+    const response = await ezrahCredential.policyControlCredential({
+      credential_urn: credential_urn as string,
+      action: 'REVOKE',
+      state: true,
+    });
+
+    console.log(response);
+    expect(response).toBeTruthy();
   });
 
   it.skip('Ceate Verification Model', async () => {
