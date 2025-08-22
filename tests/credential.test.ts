@@ -71,7 +71,7 @@ describe('Credential', () => {
     expect(credentialTemplate.id).toBeDefined();
   });
 
-  it.skip(`Get Templates Listing`, async () => {
+  it(`Get Templates Listing`, async () => {
     const response = await ezrahCredential.templates();
 
     expect(response?.length).toBeGreaterThan(2);
@@ -109,7 +109,7 @@ describe('Credential', () => {
     expect(typeof response?.url).toBe('string');
   });
 
-  it.skip('Issue an Encrypted Credential', async () => {
+  it('Issue an Encrypted Credential', async () => {
     // const receiverPk = ed25519.utils.randomPrivateKey();
     // const receiverPuk = ed25519.getPublicKey(receiverPk);
 
@@ -150,7 +150,9 @@ describe('Credential', () => {
         'background_check_status',
       ],
       'efdedfabd5db14876e28b8a920a63455736e2f2d8a85bee37db9c8381068534b',
-
+      {
+        policy_control: true,
+      },
       // bytesToHex(receiverPuk),
     );
 

@@ -80,12 +80,19 @@ class EzrahCredential {
     }
   }
 
-  async issueCredentialSDK(params: CreateCredentialSDK): Promise<CredentialSDKResponse | null> {
+  async issueCredentialSDK(
+    params: CreateCredentialSDK,
+    options?: {
+      policy_control: boolean;
+    },
+  ): Promise<CredentialSDKResponse | null> {
     try {
+      console.log('Template ID', params.template_claim_id);
       const response: GraphQLResponse = await graphqlClient.request(CREATECREDENTIALSDK, {
         title: params.title,
         template_claim_id: params.template_claim_id,
         claims: params.claims,
+        policy_control: options?.policy_control ? options.policy_control : false,
       });
       if (!response?.createCredentialSDK) {
         throw new Error('Error occurs while issuing credential');
@@ -354,6 +361,9 @@ class EzrahCredential {
     claims: T,
     disclosure: Array<keyof T>,
     reciever_pk: string,
+    options?: {
+      policy_control: boolean;
+    },
   ): Promise<EncryptedSdjwtResponse> {
     try {
       // @ts-expect-error TODO: Resolve on type issues between disclosure aray and disclosure frame
@@ -372,6 +382,8 @@ class EzrahCredential {
         reciever_pk,
       );
 
+      const policy_control = options?.policy_control ? options.policy_control : false;
+
       const response: GraphQLResponse = await graphqlClient.request(
         CREATE_ENCRYPTED_SDJWT_CREDENTIAL,
         {
@@ -380,6 +392,7 @@ class EzrahCredential {
             packedClaims,
             encrypted_disclosures: encryptedDislosure,
           },
+          policy_control,
         },
       );
 

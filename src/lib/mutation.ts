@@ -23,9 +23,20 @@ export const CREATETEMPLATESTRUCTURE = gql`
 `;
 
 export const CREATECREDENTIALSDK = gql`
-  mutation CreateCredentialSDK($title: String!, $template_claim_id: String!, $claims: JSON!) {
-    createCredentialSDK(title: $title, template_claim_id: $template_claim_id, claims: $claims) {
+  mutation CreateCredentialSDK(
+    $title: String!
+    $template_claim_id: String!
+    $claims: JSON!
+    $policy_control: Boolean
+  ) {
+    createCredentialSDK(
+      title: $title
+      template_claim_id: $template_claim_id
+      claims: $claims
+      policy_control: $policy_control
+    ) {
       url
+      urn
       pending_id
     }
   }
@@ -157,8 +168,9 @@ export const DELETECREDENTIALWEBHOOK = gql`
 `;
 
 export const CREATE_ENCRYPTED_SDJWT_CREDENTIAL = gql`
-  mutation createEncryptedSdJwtCredential($packedRequest: JSON) {
-    createEncryptedSdJwtCredential(packedRequest: $packedRequest) {
+  mutation createEncryptedSdJwtCredential($packedRequest: JSON, $policy_control: Boolean) {
+    createEncryptedSdJwtCredential(packedRequest: $packedRequest, policy_control: $policy_control) {
+      urn
       _encoded
       credential
     }

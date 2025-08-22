@@ -261,6 +261,7 @@ declare global {
 
   interface EncryptedSdjwtResponse {
     _encoded: string;
+    urn?: string;
     credential: {
       [key: string]: unknown;
     };
