@@ -274,6 +274,14 @@ declare global {
       [key: string]: unknown;
     };
   }
+
+  interface EncPayload {
+    ciphertext: string;
+    iv: string;
+    encryptedSymmetricKey: string;
+    alg: 'RSA-OAEP-AES-GCM' | unknown;
+    enc: 'AES-GCM';
+  }
 }
 
 export default {};

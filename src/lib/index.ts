@@ -32,6 +32,7 @@ import {
 import { v4 } from 'uuid';
 import { DisclosureFrame } from '@sd-jwt/types';
 import SdJwtHelper from '@coincord/sd-jwt-helper';
+import { decryptRSAData } from './encryption.js';
 
 /**
  *  Ezrah Credential
@@ -39,8 +40,11 @@ import SdJwtHelper from '@coincord/sd-jwt-helper';
 class EzrahCredential {
   private client: GraphQLClient;
 
+  private rsaPrivateKey: string;
+
   constructor() {
     this.client = graphqlClient;
+    this.rsaPrivateKey = <string>process.env.RSA_PRIV_KEY;
   }
 
   public getClient(): GraphQLClient {
@@ -416,6 +420,18 @@ class EzrahCredential {
     } catch (error) {
       throw error;
     }
+  }
+
+  async decryptEncryptedWebhookPayload(enc: {
+    event: string;
+    data: EncPayload;
+    encrypted: boolean;
+  }) {
+    const decryptedData = await decryptRSAData(enc.data, this.rsaPrivateKey);
+    return {
+      decryptedData,
+      event: enc.event,
+    };
   }
 }
 
