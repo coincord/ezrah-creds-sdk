@@ -275,7 +275,7 @@ declare global {
     };
   }
 
-  interface EncPayload {
+  export interface EncPayload {
     ciphertext: string;
     iv: string;
     encryptedSymmetricKey: string;
