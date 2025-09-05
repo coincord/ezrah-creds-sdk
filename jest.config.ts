@@ -43,20 +43,19 @@
 
 // export default config
 
-import type { Config } from "@jest/types"
+import type { Config } from '@jest/types';
 
 const config: Config.InitialOptions = {
-
   preset: 'ts-jest',
-  testEnvironment: "node",
-  extensionsToTreatAsEsm: [".ts", ".tsx"],
+  testEnvironment: 'node',
+  extensionsToTreatAsEsm: ['.ts', '.tsx'],
   moduleNameMapper: {
     '\\.(jpg|jpeg|png|gif|webp|svg)$': 'identity-obj-proxy',
     '\\.(ts)$': '<rootDir>/.jest/identity-obj-proxy-esm.js',
   },
   transform: {
-    "^.+\\.tsx?$": [
-      "ts-jest",
+    '^.+\\.tsx?$': [
+      'ts-jest',
       {
         useESM: true,
       },
@@ -66,6 +65,7 @@ const config: Config.InitialOptions = {
     // Transform ES modules in node_modules
     // "node_modules/(?!(graphql-request|@graphql-typed-document-node|extract-files|formdata-node|web-streams-polyfill|cross-fetch)/)",
   ],
-}
+};
 
-export default config
+export default config;
+

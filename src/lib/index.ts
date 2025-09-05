@@ -32,6 +32,8 @@ import {
 import { v4 } from 'uuid';
 import { DisclosureFrame } from '@sd-jwt/types';
 import SdJwtHelper from '@coincord/sd-jwt-helper';
+import { decryptRSAData } from './encryption.js';
+import { decodeBase64url } from './utils.js';
 
 /**
  *  Ezrah Credential
@@ -416,6 +418,71 @@ class EzrahCredential {
     } catch (error) {
       throw error;
     }
+  }
+
+  /** Decrypt Encrypted presentation payload with the supplied RSA private key from the ezrah account
+   *
+   * @param enc EncPayload
+   * @param rsaPrivateKey string
+   * @returns
+   */
+  async decryptEncryptedWebhookPayload(
+    enc: {
+      event: string;
+      data: EncPayload | string;
+      encrypted: boolean;
+    },
+    rsaPrivateKey: string,
+  ): Promise<{
+    presentations: { payload: { [x: string]: unknown; presented_claims: object } }[];
+    event: string;
+  }> {
+    let decryptedData: {
+      presentations: [{ presentation: string }];
+    } | null = null;
+    if (enc.encrypted) {
+      decryptedData = JSON.parse(await decryptRSAData(enc.data as EncPayload, rsaPrivateKey)) as {
+        presentations: [{ presentation: string }];
+      };
+    } else {
+      decryptedData = JSON.parse(enc.data as string) as {
+        presentations: [{ presentation: string }];
+      };
+    }
+
+    const presentations = decryptedData.presentations;
+    const pData = presentations.map((p: { presentation: string }) => {
+      const split_p = p.presentation.split('.');
+      const [header, payload, rest] = split_p;
+      // split the rest of the data and attempt decoding after the main signature value
+
+      const restValues = rest.split('~');
+      const [signature, ...restValue] = restValues;
+      const presentedClaims = restValue
+        .map((v) => {
+          if (v === '') {
+            return {};
+          } else {
+            const decodedV = JSON.parse(decodeBase64url(v));
+            return {
+              [decodedV[1]]: decodedV[2],
+            };
+          }
+        })
+        .reduce((p, c) => ({ ...p, ...c }), {});
+
+      const pDecoded = {
+        header: JSON.parse(decodeBase64url(header)),
+        payload: { ...JSON.parse(decodeBase64url(payload)), presented_claims: presentedClaims },
+        signature: signature,
+      };
+      return pDecoded;
+    });
+
+    return {
+      presentations: pData,
+      event: enc.event,
+    };
   }
 }
 

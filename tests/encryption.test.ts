@@ -1,0 +1,124 @@
+import crypto from 'crypto';
+import { encryptRSAData, decryptRSAData } from '../src/lib/encryption'; // adjust import to your file
+import { decodeBase64url, encodeBase64url } from '../src/lib/utils';
+import EzrahCredential from '../src/lib';
+
+// Helper: PEM -> ArrayBuffer
+function pemToArrayBuffer(pem: string): ArrayBuffer {
+  const b64 = pem.replace(/-----[^-]+-----/g, '').replace(/\s+/g, '');
+  const binary = Buffer.from(b64, 'base64');
+  return binary.buffer.slice(binary.byteOffset, binary.byteOffset + binary.byteLength);
+}
+
+describe('RSA + AES-GCM hybrid encryption', () => {
+  let publicKeyPem: string;
+  let privateKeyPem: string;
+  let ezrahInstance: EzrahCredential;
+  const presentationData: string =
+    '{"presentations":[{"presentation":"eyJraWQiOiIwNGY5M2UzYTUzNDM4ZTYwYmM2NzA1NTRmMDI2NzE4ZGRmY2ExYTVlNTUzOTZiMDRiZWI3ZDhhNTAxNWE1MDIxMDA0ZDdiNDRhMTY3OGY4NjNiNzk4MGU4MzQ0ZWY1MTZjYmY4Yzc0MmYxZDc4M2NhN2Y1NjE0ZWMzOTFhNTY1NTFjIiwiYWxnIjoiRVMyNTZLLVIiLCJ0eXAiOiJkYytzZC1qd3QifQ.eyJpc3MiOiJkaWQ6ZXpyYWg6MHhEMjVENUJBMzMwNTdDNkVjMUE4M0RiN2Y0MTZBMjFmNzQxNUMxNDgxIiwic3ViIjoiZGlkOmV6cmFoOjB4N2UxRDlmM2RBRjU1RDlBNjgwMDQ4NDg0YzQ2MDRhNkU2OTVmNTM4OSIsImV4cGlyeV9kYXRlIjoiMjAyNy0xMC0xMFQwMDowMDowMC4wMDBaIiwiaXNzdWFuY2VEYXRlIjoiMjAyNS0wOC0zMVQwNToyNzowNi42NDNaIiwiX3NkIjpbIkREajFRZ0ozaVl1bDkzWDRRNzJvblEyd3M1N1IzWDlFdHlVTVlpUURFUTQiLCJrZzQ3cTRvUmNKZ0IzT2k1RDBYR2FIdkdibGRMZ1ZRSlRXZlBwRE9WQ2FZIiwicDRFVXNxM3A5LTR1VWVnQWFUN1haenRxaEJVdXVlMFFxTm9OUklEQkRfMCJdLCJ1cm4iOiJ1cm46ZXpyYWhfdmM6MDE5OGZlOTctZWZlZi03MTIzLTgyNjMtMGZmNjc3ZDRmYjIwIiwicG9saWN5X2NvbnRyb2wiOnRydWUsImNyZWRlbnRpYWxTdGF0dXMiOlt7ImlkIjoiaHR0cHM6Ly9jcmVkZW50aWFsLXN0YXR1cy5lenJhaC5jby9hcGkvdjEvcmV2b2NhdGlvbi9kaWQ6ZXpyYWg6MHhEMjVENUJBMzMwNTdDNkVjMUE4M0RiN2Y0MTZBMjFmNzQxNUMxNDgxLzIwMjUtMDgtMjYjMTMiLCJ0eXBlIjoiTWVya2xlUmV2b2tlU3RhdHVzMjAyNSIsInN0YXR1c0xpc3RJbmRleCI6IjEzIiwic3RhdHVzTGlzdENyZWRlbnRpYWwiOiJodHRwczovL2NyZWRlbnRpYWwtc3RhdHVzLmV6cmFoLmNvL2FwaS92MS9yZXZvY2F0aW9uLzIwMjUtMDgtMjYiLCJzdGF0dXNDaGVja0VuZHBvaW50IjoiaHR0cHM6Ly9jcmVkZW50aWFsLXN0YXR1cy5lenJhaC5jby9hcGkvdjEvc3RhdHVzP2xpc3RfcmVmPTIwMjUtMDgtMjYmZGlkPWRpZDplenJhaDoweEQyNUQ1QkEzMzA1N0M2RWMxQTgzRGI3ZjQxNkEyMWY3NDE1QzE0ODEmcHVycG9zZT1SRVZPS0UmaW5kZXg9MTMifSx7ImlkIjoiaHR0cHM6Ly9jcmVkZW50aWFsLXN0YXR1cy5lenJhaC5jby9hcGkvdjEvc3VzcGVuZC9kaWQ6ZXpyYWg6MHhEMjVENUJBMzMwNTdDNkVjMUE4M0RiN2Y0MTZBMjFmNzQxNUMxNDgxLzIwMjUtMDgtMjYjMTMiLCJ0eXBlIjoiTWVya2xlU3VzcGVuZGVkU3RhdHVzMjAyNSIsInN0YXR1c0xpc3RJbmRleCI6IjEzIiwic3RhdHVzTGlzdENyZWRlbnRpYWwiOiJodHRwczovL2NyZWRlbnRpYWwtc3RhdHVzLmV6cmFoLmNvL2FwaS92MS9zdXNwZW5kL2RpZDplenJhaDoweEQyNUQ1QkEzMzA1N0M2RWMxQTgzRGI3ZjQxNkEyMWY3NDE1QzE0ODEvMjAyNS0wOC0yNiIsInN0YXR1c0NoZWNrRW5kcG9pbnQiOiJodHRwczovL2NyZWRlbnRpYWwtc3RhdHVzLmV6cmFoLmNvL2FwaS92MS9zdGF0dXM_bGlzdF9yZWY9MjAyNS0wOC0yNiZkaWQ9ZGlkOmV6cmFoOjB4RDI1RDVCQTMzMDU3QzZFYzFBODNEYjdmNDE2QTIxZjc0MTVDMTQ4MSZwdXJwb3NlPVNVU1BFTkQmaW5kZXg9MTMifSx7ImlkIjoiaHR0cHM6Ly9jcmVkZW50aWFsLXN0YXR1cy5lenJhaC5jby9hcGkvdjEvZXhwaXJ5L2RpZDplenJhaDoweEQyNUQ1QkEzMzA1N0M2RWMxQTgzRGI3ZjQxNkEyMWY3NDE1QzE0ODEvMjAyNS0wOC0yNiMxMyIsInR5cGUiOiJNZXJrbGVFeHBpcnlTdGF0dXMyMDI1Iiwic3RhdHVzTGlzdEluZGV4IjoiMTMiLCJzdGF0dXNMaXN0Q3JlZGVudGlhbCI6Imh0dHBzOi8vY3JlZGVudGlhbC1zdGF0dXMuZXpyYWguY28vYXBpL3YxL2V4cGlyeS9kaWQ6ZXpyYWg6MHhEMjVENUJBMzMwNTdDNkVjMUE4M0RiN2Y0MTZBMjFmNzQxNUMxNDgxLzIwMjUtMDgtMjYiLCJzdGF0dXNDaGVja0VuZHBvaW50IjoiaHR0cHM6Ly9jcmVkZW50aWFsLXN0YXR1cy5lenJhaC5jby9hcGkvdjEvc3RhdHVzP2xpc3RfcmVmPTIwMjUtMDgtMjYmZGlkPWRpZDplenJhaDoweEQyNUQ1QkEzMzA1N0M2RWMxQTgzRGI3ZjQxNkEyMWY3NDE1QzE0ODEmcHVycG9zZT1FWFBJUlkmaW5kZXg9MTMifV0sIl9zZF9hbGciOiJzaGEyNTYifQ.gBA75UL2ptYQah2ncaRj3Pkg7FATqqvw5TsWGz__-KBE-ssVZozPMA99rZAFUSzopXqG_5_PNQsjBM4_F3yFkAA"},{"presentation":"eyJraWQiOiIwNGY5M2UzYTUzNDM4ZTYwYmM2NzA1NTRmMDI2NzE4ZGRmY2ExYTVlNTUzOTZiMDRiZWI3ZDhhNTAxNWE1MDIxMDA0ZDdiNDRhMTY3OGY4NjNiNzk4MGU4MzQ0ZWY1MTZjYmY4Yzc0MmYxZDc4M2NhN2Y1NjE0ZWMzOTFhNTY1NTFjIiwiYWxnIjoiRVMyNTZLLVIiLCJ0eXAiOiJkYytzZC1qd3QifQ.eyJpc3MiOiJkaWQ6ZXpyYWg6MHhEMjVENUJBMzMwNTdDNkVjMUE4M0RiN2Y0MTZBMjFmNzQxNUMxNDgxIiwic3ViIjoiZGlkOmV6cmFoOjB4N2UxRDlmM2RBRjU1RDlBNjgwMDQ4NDg0YzQ2MDRhNkU2OTVmNTM4OSIsImV4cGlyeV9kYXRlIjoiMjAyNy0xMC0xMFQwMDowMDowMC4wMDBaIiwiaXNzdWFuY2VEYXRlIjoiMjAyNS0wOC0zMVQwNToyNzowNi42NDNaIiwiX3NkIjpbIkREajFRZ0ozaVl1bDkzWDRRNzJvblEyd3M1N1IzWDlFdHlVTVlpUURFUTQiLCJrZzQ3cTRvUmNKZ0IzT2k1RDBYR2FIdkdibGRMZ1ZRSlRXZlBwRE9WQ2FZIiwicDRFVXNxM3A5LTR1VWVnQWFUN1haenRxaEJVdXVlMFFxTm9OUklEQkRfMCJdLCJ1cm4iOiJ1cm46ZXpyYWhfdmM6MDE5OGZlOTctZWZlZi03MTIzLTgyNjMtMGZmNjc3ZDRmYjIwIiwicG9saWN5X2NvbnRyb2wiOnRydWUsImNyZWRlbnRpYWxTdGF0dXMiOlt7ImlkIjoiaHR0cHM6Ly9jcmVkZW50aWFsLXN0YXR1cy5lenJhaC5jby9hcGkvdjEvcmV2b2NhdGlvbi9kaWQ6ZXpyYWg6MHhEMjVENUJBMzMwNTdDNkVjMUE4M0RiN2Y0MTZBMjFmNzQxNUMxNDgxLzIwMjUtMDgtMjYjMTMiLCJ0eXBlIjoiTWVya2xlUmV2b2tlU3RhdHVzMjAyNSIsInN0YXR1c0xpc3RJbmRleCI6IjEzIiwic3RhdHVzTGlzdENyZWRlbnRpYWwiOiJodHRwczovL2NyZWRlbnRpYWwtc3RhdHVzLmV6cmFoLmNvL2FwaS92MS9yZXZvY2F0aW9uLzIwMjUtMDgtMjYiLCJzdGF0dXNDaGVja0VuZHBvaW50IjoiaHR0cHM6Ly9jcmVkZW50aWFsLXN0YXR1cy5lenJhaC5jby9hcGkvdjEvc3RhdHVzP2xpc3RfcmVmPTIwMjUtMDgtMjYmZGlkPWRpZDplenJhaDoweEQyNUQ1QkEzMzA1N0M2RWMxQTgzRGI3ZjQxNkEyMWY3NDE1QzE0ODEmcHVycG9zZT1SRVZPS0UmaW5kZXg9MTMifSx7ImlkIjoiaHR0cHM6Ly9jcmVkZW50aWFsLXN0YXR1cy5lenJhaC5jby9hcGkvdjEvc3VzcGVuZC9kaWQ6ZXpyYWg6MHhEMjVENUJBMzMwNTdDNkVjMUE4M0RiN2Y0MTZBMjFmNzQxNUMxNDgxLzIwMjUtMDgtMjYjMTMiLCJ0eXBlIjoiTWVya2xlU3VzcGVuZGVkU3RhdHVzMjAyNSIsInN0YXR1c0xpc3RJbmRleCI6IjEzIiwic3RhdHVzTGlzdENyZWRlbnRpYWwiOiJodHRwczovL2NyZWRlbnRpYWwtc3RhdHVzLmV6cmFoLmNvL2FwaS92MS9zdXNwZW5kL2RpZDplenJhaDoweEQyNUQ1QkEzMzA1N0M2RWMxQTgzRGI3ZjQxNkEyMWY3NDE1QzE0ODEvMjAyNS0wOC0yNiIsInN0YXR1c0NoZWNrRW5kcG9pbnQiOiJodHRwczovL2NyZWRlbnRpYWwtc3RhdHVzLmV6cmFoLmNvL2FwaS92MS9zdGF0dXM_bGlzdF9yZWY9MjAyNS0wOC0yNiZkaWQ9ZGlkOmV6cmFoOjB4RDI1RDVCQTMzMDU3QzZFYzFBODNEYjdmNDE2QTIxZjc0MTVDMTQ4MSZwdXJwb3NlPVNVU1BFTkQmaW5kZXg9MTMifSx7ImlkIjoiaHR0cHM6Ly9jcmVkZW50aWFsLXN0YXR1cy5lenJhaC5jby9hcGkvdjEvZXhwaXJ5L2RpZDplenJhaDoweEQyNUQ1QkEzMzA1N0M2RWMxQTgzRGI3ZjQxNkEyMWY3NDE1QzE0ODEvMjAyNS0wOC0yNiMxMyIsInR5cGUiOiJNZXJrbGVFeHBpcnlTdGF0dXMyMDI1Iiwic3RhdHVzTGlzdEluZGV4IjoiMTMiLCJzdGF0dXNMaXN0Q3JlZGVudGlhbCI6Imh0dHBzOi8vY3JlZGVudGlhbC1zdGF0dXMuZXpyYWguY28vYXBpL3YxL2V4cGlyeS9kaWQ6ZXpyYWg6MHhEMjVENUJBMzMwNTdDNkVjMUE4M0RiN2Y0MTZBMjFmNzQxNUMxNDgxLzIwMjUtMDgtMjYiLCJzdGF0dXNDaGVja0VuZHBvaW50IjoiaHR0cHM6Ly9jcmVkZW50aWFsLXN0YXR1cy5lenJhaC5jby9hcGkvdjEvc3RhdHVzP2xpc3RfcmVmPTIwMjUtMDgtMjYmZGlkPWRpZDplenJhaDoweEQyNUQ1QkEzMzA1N0M2RWMxQTgzRGI3ZjQxNkEyMWY3NDE1QzE0ODEmcHVycG9zZT1FWFBJUlkmaW5kZXg9MTMifV0sIl9zZF9hbGciOiJzaGEyNTYifQ.gBA75UL2ptYQah2ncaRj3Pkg7FATqqvw5TsWGz__-KBE-ssVZozPMA99rZAFUSzopXqG_5_PNQsjBM4_F3yFkAA"},{"presentation":"eyJraWQiOiIwNGY5M2UzYTUzNDM4ZTYwYmM2NzA1NTRmMDI2NzE4ZGRmY2ExYTVlNTUzOTZiMDRiZWI3ZDhhNTAxNWE1MDIxMDA0ZDdiNDRhMTY3OGY4NjNiNzk4MGU4MzQ0ZWY1MTZjYmY4Yzc0MmYxZDc4M2NhN2Y1NjE0ZWMzOTFhNTY1NTFjIiwiYWxnIjoiRVMyNTZLLVIiLCJ0eXAiOiJkYytzZC1qd3QifQ.eyJpc3MiOiJkaWQ6ZXpyYWg6MHhEMjVENUJBMzMwNTdDNkVjMUE4M0RiN2Y0MTZBMjFmNzQxNUMxNDgxIiwic3ViIjoiZGlkOmV6cmFoOjB4N2UxRDlmM2RBRjU1RDlBNjgwMDQ4NDg0YzQ2MDRhNkU2OTVmNTM4OSIsImV4cGlyeV9kYXRlIjoiMjAyNy0xMC0xMFQwMDowMDowMC4wMDBaIiwiaXNzdWFuY2VEYXRlIjoiMjAyNS0wOC0zMVQwNToyNzowNi42NDNaIiwiX3NkIjpbIkREajFRZ0ozaVl1bDkzWDRRNzJvblEyd3M1N1IzWDlFdHlVTVlpUURFUTQiLCJrZzQ3cTRvUmNKZ0IzT2k1RDBYR2FIdkdibGRMZ1ZRSlRXZlBwRE9WQ2FZIiwicDRFVXNxM3A5LTR1VWVnQWFUN1haenRxaEJVdXVlMFFxTm9OUklEQkRfMCJdLCJ1cm4iOiJ1cm46ZXpyYWhfdmM6MDE5OGZlOTctZWZlZi03MTIzLTgyNjMtMGZmNjc3ZDRmYjIwIiwicG9saWN5X2NvbnRyb2wiOnRydWUsImNyZWRlbnRpYWxTdGF0dXMiOlt7ImlkIjoiaHR0cHM6Ly9jcmVkZW50aWFsLXN0YXR1cy5lenJhaC5jby9hcGkvdjEvcmV2b2NhdGlvbi9kaWQ6ZXpyYWg6MHhEMjVENUJBMzMwNTdDNkVjMUE4M0RiN2Y0MTZBMjFmNzQxNUMxNDgxLzIwMjUtMDgtMjYjMTMiLCJ0eXBlIjoiTWVya2xlUmV2b2tlU3RhdHVzMjAyNSIsInN0YXR1c0xpc3RJbmRleCI6IjEzIiwic3RhdHVzTGlzdENyZWRlbnRpYWwiOiJodHRwczovL2NyZWRlbnRpYWwtc3RhdHVzLmV6cmFoLmNvL2FwaS92MS9yZXZvY2F0aW9uLzIwMjUtMDgtMjYiLCJzdGF0dXNDaGVja0VuZHBvaW50IjoiaHR0cHM6Ly9jcmVkZW50aWFsLXN0YXR1cy5lenJhaC5jby9hcGkvdjEvc3RhdHVzP2xpc3RfcmVmPTIwMjUtMDgtMjYmZGlkPWRpZDplenJhaDoweEQyNUQ1QkEzMzA1N0M2RWMxQTgzRGI3ZjQxNkEyMWY3NDE1QzE0ODEmcHVycG9zZT1SRVZPS0UmaW5kZXg9MTMifSx7ImlkIjoiaHR0cHM6Ly9jcmVkZW50aWFsLXN0YXR1cy5lenJhaC5jby9hcGkvdjEvc3VzcGVuZC9kaWQ6ZXpyYWg6MHhEMjVENUJBMzMwNTdDNkVjMUE4M0RiN2Y0MTZBMjFmNzQxNUMxNDgxLzIwMjUtMDgtMjYjMTMiLCJ0eXBlIjoiTWVya2xlU3VzcGVuZGVkU3RhdHVzMjAyNSIsInN0YXR1c0xpc3RJbmRleCI6IjEzIiwic3RhdHVzTGlzdENyZWRlbnRpYWwiOiJodHRwczovL2NyZWRlbnRpYWwtc3RhdHVzLmV6cmFoLmNvL2FwaS92MS9zdXNwZW5kL2RpZDplenJhaDoweEQyNUQ1QkEzMzA1N0M2RWMxQTgzRGI3ZjQxNkEyMWY3NDE1QzE0ODEvMjAyNS0wOC0yNiIsInN0YXR1c0NoZWNrRW5kcG9pbnQiOiJodHRwczovL2NyZWRlbnRpYWwtc3RhdHVzLmV6cmFoLmNvL2FwaS92MS9zdGF0dXM_bGlzdF9yZWY9MjAyNS0wOC0yNiZkaWQ9ZGlkOmV6cmFoOjB4RDI1RDVCQTMzMDU3QzZFYzFBODNEYjdmNDE2QTIxZjc0MTVDMTQ4MSZwdXJwb3NlPVNVU1BFTkQmaW5kZXg9MTMifSx7ImlkIjoiaHR0cHM6Ly9jcmVkZW50aWFsLXN0YXR1cy5lenJhaC5jby9hcGkvdjEvZXhwaXJ5L2RpZDplenJhaDoweEQyNUQ1QkEzMzA1N0M2RWMxQTgzRGI3ZjQxNkEyMWY3NDE1QzE0ODEvMjAyNS0wOC0yNiMxMyIsInR5cGUiOiJNZXJrbGVFeHBpcnlTdGF0dXMyMDI1Iiwic3RhdHVzTGlzdEluZGV4IjoiMTMiLCJzdGF0dXNMaXN0Q3JlZGVudGlhbCI6Imh0dHBzOi8vY3JlZGVudGlhbC1zdGF0dXMuZXpyYWguY28vYXBpL3YxL2V4cGlyeS9kaWQ6ZXpyYWg6MHhEMjVENUJBMzMwNTdDNkVjMUE4M0RiN2Y0MTZBMjFmNzQxNUMxNDgxLzIwMjUtMDgtMjYiLCJzdGF0dXNDaGVja0VuZHBvaW50IjoiaHR0cHM6Ly9jcmVkZW50aWFsLXN0YXR1cy5lenJhaC5jby9hcGkvdjEvc3RhdHVzP2xpc3RfcmVmPTIwMjUtMDgtMjYmZGlkPWRpZDplenJhaDoweEQyNUQ1QkEzMzA1N0M2RWMxQTgzRGI3ZjQxNkEyMWY3NDE1QzE0ODEmcHVycG9zZT1FWFBJUlkmaW5kZXg9MTMifV0sIl9zZF9hbGciOiJzaGEyNTYifQ.iuRqN3f4ZLwlfNQAFwSJGBeUA0mLcE86NgwhM280-DYLSICTtF1bsbFfPHS0CB6qUMRTxb24A-feCTpN8u0yxwE~WyI2NzhmM2ZmMy0wZmM4LTRlM2MtOTU1Yi03ODFiN2ZkNDVjZmEiLCJmaXJzdF9uYW1lIiwiTmVsc29uIl0~"}]}';
+
+  let sampleEncPayload: {
+    event: string;
+    data: EncPayload;
+    encrypted: boolean;
+  };
+
+  beforeAll(() => {
+    // Generate RSA keypair once for tests
+    const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
+      modulusLength: 2048,
+      publicKeyEncoding: { type: 'spki', format: 'pem' },
+      privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
+    });
+
+    ezrahInstance = new EzrahCredential();
+
+    publicKeyPem = publicKey;
+    privateKeyPem = privateKey;
+  });
+
+  it('should encrypt and decrypt disclosures correctly', async () => {
+    const disclosures = {
+      name: 'Alice',
+      age: 30,
+      verified: true,
+      roles: ['admin', 'editor'],
+    };
+
+    // Encrypt
+    const encrypted = await encryptRSAData(JSON.stringify(disclosures), publicKeyPem);
+
+    expect(encrypted).toHaveProperty('ciphertext');
+    expect(encrypted).toHaveProperty('iv');
+    expect(encrypted).toHaveProperty('encryptedSymmetricKey');
+
+    // Decrypt
+    const decrypted = await decryptRSAData(encrypted, privateKeyPem);
+
+    expect(JSON.parse(decrypted)).toEqual(disclosures);
+  });
+
+  it('Test the encryption presentation to handle the encypt process', async () => {
+    const encryptedData = await encryptRSAData(presentationData, publicKeyPem);
+    console.log('Encrypted Data here', encryptedData);
+
+    const presentationResults = ezrahInstance.decryptEncryptedWebhookPayload(
+      {
+        encrypted: true,
+        data: encryptedData,
+        event: 'automated',
+      },
+      privateKeyPem,
+    );
+    // let's decrypt here
+    // const decryptedData = JSON.parse(await decryptRSAData(encryptedData, privateKeyPem));
+    // console.log(decryptedData);
+    //
+    // // let breakdown the presentations
+    // const presentations = decryptedData.presentations;
+    // const pData = presentations.map((p: { presentation: string }) => {
+    //   const split_p = p.presentation.split('.');
+    //   const [header, payload, rest] = split_p;
+    //   // split the rest of the data and attempt decoding after the main signature value
+    //
+    //   const restValues = rest.split('~');
+    //   const [signature, ...restValue] = restValues;
+    //   const presentedClaims = restValue
+    //     .map((v) => {
+    //       if (v === '') {
+    //         return {};
+    //       } else {
+    //         const decodedV = JSON.parse(decodeBase64url(v));
+    //         return {
+    //           [decodedV[1]]: decodedV[2],
+    //         };
+    //       }
+    //     })
+    //     .reduce((p, c) => ({ ...p, ...c }), {});
+    //
+    //   const pDecoded = {
+    //     header: JSON.parse(decodeBase64url(header)),
+    //     payload: { ...JSON.parse(decodeBase64url(payload)), presented_claims: presentedClaims },
+    //     signature: signature,
+    //   };
+    //   return pDecoded;
+    // });
+
+    console.log(JSON.stringify(presentationResults, null, 2));
+  });
+
+  it('should fail to decrypt with wrong private key', async () => {
+    // Generate a different RSA keypair
+    const { privateKey } = crypto.generateKeyPairSync('rsa', {
+      modulusLength: 2048,
+      privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
+      publicKeyEncoding: { type: 'spki', format: 'pem' },
+    });
+
+    const disclosures = { secret: 'top-secret' };
+    const encrypted = await encryptRSAData(JSON.stringify(disclosures), publicKeyPem);
+
+    // Wrong private key should throw
+    await expect(decryptRSAData(encrypted, privateKey)).rejects.toThrow();
+  });
+});
