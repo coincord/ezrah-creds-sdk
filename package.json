@@ -1,6 +1,6 @@
 {
   "name": "@coincord/ezrah-creds-sdk",
-  "version": "1.0.0-alpha.13",
+  "version": "1.0.0-alpha.14",
   "description": "A module for managing and manipulating operations with bitcoin, ethereum and litecoin wallets.",
   "main": "dist/src/lib/index.js",
   "types": "dist/src/lib/index.d.ts",
