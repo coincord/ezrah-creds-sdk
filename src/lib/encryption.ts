@@ -26,19 +26,16 @@ export async function wrapDEKForRecipients(
   recipientEd25519PublicKeys: Uint8Array[],
 ): Promise<WrappedDeks> {
   const wrappedDEKs: WrappedDeks = {};
-  // Convert DEK private key to hex for encryption
   const dekPrivateKeyHex = bytesToHex(dekPrivateKey);
   for (let i = 0; i < recipientEd25519PublicKeys.length; i++) {
     const recipientId = `recipient_${i + 1}`;
 
     try {
-      // Convert Ed25519 public key to X25519
       const x25519PublicKey = ed25519ToX25519PublicKey(recipientEd25519PublicKeys[i]);
-      // Wrap DEK using X25519 ECDH + AES-GCM
       const wrappedDEK = await encryptWithX25519(dekPrivateKeyHex, x25519PublicKey);
       wrappedDEKs[recipientId] = wrappedDEK;
     } catch (error) {
-      console.error(`❌ Failed to wrap DEK for ${recipientId}:`, error);
+      throw new Error(`❌ Failed to wrap DEK for ${recipientId}: ${error}`);
     }
   }
 
