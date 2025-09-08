@@ -3,3 +3,5 @@ node_modules
 dist
 .npmrc
 CLAUDE.md
+
+yarn-error.log

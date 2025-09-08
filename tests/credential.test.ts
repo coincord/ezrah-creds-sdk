@@ -150,7 +150,7 @@ describe('Credential', () => {
         'emergency_contact_phone',
         'background_check_status',
       ],
-      'efdedfabd5db14876e28b8a920a63455736e2f2d8a85bee37db9c8381068534b',
+      ['efdedfabd5db14876e28b8a920a63455736e2f2d8a85bee37db9c8381068534b'],
       {
         policy_control: true,
       },
