@@ -164,7 +164,10 @@ const endUserPublicKey = 'HexadecimalEncodedEndUserPublickKey';
 const result = await ezrahCredsSDK.issueEncryptedSDJWT({
   claims,
   disclosureFrame,
-  endUserEd25519HexPuk: endUserPublicKey,
+  ['recovery_puk', 'device_puk'],
+  {
+    policy_control: true
+  }
 });
 ```
 
