@@ -21,6 +21,10 @@ export function bytesToBase64(b: Uint8Array): string {
   return u8a.toString(b, 'base64pad');
 }
 
+export function bytesToHex(b: Uint8Array): string {
+  return u8a.toString(b, 'base16');
+}
+
 /**
  * Encodes the bytes of an input string to base64url
  * @param s - the original string
