@@ -1,3 +1,4 @@
+import { ed25519 } from '@noble/curves/ed25519';
 import { toString, fromString } from 'uint8arrays';
 
 const u8a = { toString, fromString };
@@ -9,6 +10,26 @@ export function bytesToBase64url(b: Uint8Array): string {
 export function base64ToBytes(s: string): Uint8Array {
   const inputBase64Url = s.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
   return u8a.fromString(inputBase64Url, 'base64url');
+}
+
+/**
+ * Converts Ed25519 public keys to X25519
+ * @param publicKey - The bytes of an Ed25519P public key
+ *
+ * @beta This API may change without a BREAKING CHANGE notice.
+ */
+export function convertEd25519PublicKeyToX25519(publicKey: Uint8Array): Uint8Array {
+  return ed25519.utils.toMontgomery(publicKey);
+}
+
+/**
+ * Converts Ed25519 private keys to X25519
+ * @param privateKey - The bytes of an Ed25519P private key
+ *
+ * @beta This API may change without a BREAKING CHANGE notice.
+ */
+export function convertEd25519PrivateKeyToX25519(privateKey: Uint8Array): Uint8Array {
+  return ed25519.utils.toMontgomerySecret(privateKey);
 }
 
 /**

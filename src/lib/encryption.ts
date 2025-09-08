@@ -1,20 +1,24 @@
 import { ed25519 } from '@noble/curves/ed25519';
 import { x25519 } from '@noble/curves/ed25519';
-import { bytesToHex } from '@noble/curves/utils';
-import { bytesToBase64 } from './utils';
+import { bytesToHex, hexToBytes } from '@noble/curves/utils';
+import {
+  bytesToBase64,
+  convertEd25519PrivateKeyToX25519,
+  convertEd25519PublicKeyToX25519,
+} from './utils';
 
 /**
  * Converts Ed25519 public key to X25519 public key for ECDH
  */
 export function ed25519ToX25519PublicKey(ed25519PublicKey: Uint8Array): Uint8Array {
-  return x25519.getPublicKey(ed25519PublicKey);
+  return convertEd25519PublicKeyToX25519(ed25519PublicKey);
 }
 
 /**
  * Converts Ed25519 private key to X25519 private key for ECDH
  */
 export function ed25519ToX25519PrivateKey(ed25519PrivateKey: Uint8Array): Uint8Array {
-  return ed25519PrivateKey.slice(0, 32); // X25519 uses first 32 bytes
+  return convertEd25519PrivateKeyToX25519(ed25519PrivateKey);
 }
 
 export async function wrapDEKForRecipients(
@@ -60,7 +64,8 @@ async function encryptWithX25519(
     privKey = x25519Pair.secretKey;
     pubkey = x25519Pair.publicKey;
   } else {
-    (pubkey = ephemeralPair.pub), (privKey = ephemeralPair.pk);
+    pubkey = ephemeralPair.pub;
+    privKey = ephemeralPair.pk;
   }
 
   // Perform ECDH to get shared secret
@@ -95,14 +100,15 @@ async function encryptWithX25519(
 /**
  * Decrypts data using X25519 ECDH + AES-GCM
  */
-async function decryptWithX25519(
+export async function decryptWithX25519(
   wrappedData: WrappedDek,
   receiverX25519PrivateKey: Uint8Array,
 ): Promise<string> {
   // Parse ephemeral public key
-  const ephemeralPublicKey = new Uint8Array(
-    wrappedData.ephemeralPublickKey.match(/.{2}/g)!.map((byte) => parseInt(byte, 16)),
-  );
+  // const ephemeralPublicKey = new Uint8Array(
+  //   wrappedData.ephemeralPublickKey.match(/.{2}/g)!.map((byte) => parseInt(byte, 16)),
+  // );
+  const ephemeralPublicKey = hexToBytes(wrappedData.ephemeralPublickKey);
 
   // Perform ECDH to get shared secret
   const sharedSecret = x25519.getSharedSecret(receiverX25519PrivateKey, ephemeralPublicKey);

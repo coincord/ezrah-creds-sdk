@@ -287,6 +287,7 @@ declare global {
     ciphertext: string;
     iv: string;
     ephemeralPublickKey: string;
+    recipient_pub_key?: string;
     alg: 'X25519-AES-GCM';
     enc: 'AES-GCM';
   }
