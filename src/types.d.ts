@@ -282,6 +282,19 @@ declare global {
     alg: 'RSA-OAEP-AES-GCM' | unknown;
     enc: 'AES-GCM';
   }
+
+  export interface WrappedDek {
+    ciphertext: string;
+    iv: string;
+    ephemeralPublickKey: string;
+    recipient_pub_key?: string;
+    alg: 'X25519-AES-GCM';
+    enc: 'AES-GCM';
+  }
+
+  export interface WrappedDeks {
+    [recipientid: string]: WrappedDek;
+  }
 }
 
 export default {};

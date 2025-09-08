@@ -32,8 +32,9 @@ import {
 import { v4 } from 'uuid';
 import { DisclosureFrame } from '@sd-jwt/types';
 import SdJwtHelper from '@coincord/sd-jwt-helper';
-import { decryptRSAData } from './encryption.js';
+import { decryptRSAData, dekPair, wrapDEKForRecipients } from './encryption.js';
 import { decodeBase64url } from './utils.js';
+import { bytesToHex, hexToBytes } from '@noble/curves/utils.js';
 
 /**
  *  Ezrah Credential
@@ -375,10 +376,19 @@ class EzrahCredential {
     }
   }
 
+  /**
+   * Issue Encryoted SD-Jwt Credentials
+   *
+   * @param claims
+   * @param disclosure
+   * @param reciver_pks
+   * @param options
+   * @returns
+   */
   async issueEncryptedSDJWT<T extends Record<string, unknown>>(
     claims: T,
     disclosure: Array<keyof T>,
-    reciever_pk: string,
+    reciver_pks: [string],
     options?: {
       policy_control: boolean;
     },
@@ -395,12 +405,18 @@ class EzrahCredential {
         disclosureFrame,
       );
 
-      const encryptedDislosure = await sdHasher.generateEncryptedDisclosure(
-        disclosures,
-        reciever_pk,
-      );
-
+      // generate device DEK
+      const dek = await dekPair();
+      const dekPubKey = bytesToHex(dek.publicKey);
+      const encryptedDislosure = await sdHasher.generateEncryptedDisclosure(disclosures, dekPubKey);
       const policy_control = options?.policy_control ? options.policy_control : false;
+
+      const wrapped_recipient_access = await wrapDEKForRecipients(
+        dek.secretKey,
+        reciver_pks.map((key: string) => {
+          return hexToBytes(key);
+        }),
+      );
 
       const response: GraphQLResponse = await graphqlClient.request(
         CREATE_ENCRYPTED_SDJWT_CREDENTIAL,
@@ -409,6 +425,7 @@ class EzrahCredential {
             _hash_alg,
             packedClaims,
             encrypted_disclosures: encryptedDislosure,
+            recipients: wrapped_recipient_access,
           },
           policy_control,
         },
