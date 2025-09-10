@@ -1,6 +1,6 @@
-import { ed25519 } from '@noble/curves/ed25519';
-import { x25519 } from '@noble/curves/ed25519';
-import { bytesToHex, hexToBytes } from '@noble/curves/utils';
+import { ed25519 } from '@noble/curves/ed25519.js';
+import { x25519 } from '@noble/curves/ed25519.js';
+import { bytesToHex, hexToBytes } from '@noble/curves/utils.js';
 import {
   bytesToBase64,
   convertEd25519PrivateKeyToX25519,
