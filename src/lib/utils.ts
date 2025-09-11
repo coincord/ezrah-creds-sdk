@@ -1,4 +1,4 @@
-import { ed25519 } from '@noble/curves/ed25519';
+import { ed25519 } from '@noble/curves/ed25519.js';
 import { toString, fromString } from 'uint8arrays';
 
 const u8a = { toString, fromString };

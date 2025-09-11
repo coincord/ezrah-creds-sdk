@@ -5,7 +5,7 @@ import {
   bytesToBase64,
   convertEd25519PrivateKeyToX25519,
   convertEd25519PublicKeyToX25519,
-} from './utils';
+} from './utils.js';
 
 /**
  * Converts Ed25519 public key to X25519 public key for ECDH
