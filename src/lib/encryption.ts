@@ -129,6 +129,25 @@ export async function decryptWithX25519(
   return new TextDecoder().decode(decrypted);
 }
 
+export async function unwrapDEKForRecipient(
+  wrappedDEKs: WrappedDeks,
+  recipientId: string,
+  recipientEd25519PrivateKey: Uint8Array,
+): Promise<Uint8Array> {
+  const wrappedDEK = wrappedDEKs[recipientId];
+  if (!wrappedDEK) {
+    throw new Error(`❌ No wrapped DEK found for recipient: ${recipientId}`);
+  }
+
+  try {
+    const x25519PrivateKey = ed25519ToX25519PrivateKey(recipientEd25519PrivateKey);
+    const dekPrivateKeyHex = await decryptWithX25519(wrappedDEK, x25519PrivateKey);
+    return hexToBytes(dekPrivateKeyHex);
+  } catch (error) {
+    throw new Error(`❌ Failed to unwrap DEK for ${recipientId}: ${error}`);
+  }
+}
+
 export async function dekPair() {
   return ed25519.keygen();
 }
