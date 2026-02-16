@@ -65,6 +65,15 @@ export const TEMPLATES = gql`
   }
 `;
 
+export const SUB_ISSUER_LIST = gql`
+  query SUBIssuer {
+    sub_issuers {
+      did
+      name
+    }
+  }
+`;
+
 // VERIFICATION MODELS
 export const VERIFICATIONMODELS = gql`
   query VerificationModel {

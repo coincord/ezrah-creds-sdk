@@ -17,6 +17,7 @@ import {
   CREATEVERIFICATIONMODEL,
   DELETECREDENTIALWEBHOOK,
   POLICY_CONTROL_MUTATION,
+  SUB_ISSUER_MUTATION,
   UPDATECREDENTIALWEBHOOK,
 } from './mutation.js';
 import {
@@ -25,6 +26,7 @@ import {
   ISSUEDCREDENTIALS,
   ORGANIZATION,
   RESOLVEDID,
+  SUB_ISSUER_LIST,
   TEMPLATES,
   VERIFICATIONMODELS,
   VERIFICATIONREQUESTS,
@@ -63,6 +65,40 @@ class EzrahCredential {
       return response.createCredential as VCredential;
     } catch (error) {
       throw error;
+    }
+  }
+
+  async createSubIssuer(params: {
+    name: string;
+    description: string;
+    domain: string;
+  }): Promise<SubIssuer> {
+    try {
+      const response: GraphQLResponse = await graphqlClient.request(SUB_ISSUER_MUTATION, {
+        name: params.name,
+        domain: params.domain,
+        description: params.description,
+      });
+      if (response?.createSubIssuer) {
+        throw new Error('Error occurs while issuing credential');
+      }
+
+      return response.createSubIssuer as SubIssuer;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async subIssuers(): Promise<SubIssuer[]> {
+    try {
+      const response: GraphQLResponse = await graphqlClient.request(SUB_ISSUER_LIST);
+      if (response?.sub_issuers) {
+        throw new Error('Error occurs while issuing credential');
+      }
+
+      return response.sub_issuers as SubIssuer[];
+    } catch (err) {
+      throw err;
     }
   }
 
@@ -391,6 +427,7 @@ class EzrahCredential {
     reciver_pks: [string],
     options?: {
       policy_control: boolean;
+      sub_issuer_did?: string;
     },
   ): Promise<EncryptedSdjwtResponse> {
     try {
@@ -428,6 +465,7 @@ class EzrahCredential {
             recipients: wrapped_recipient_access,
           },
           policy_control,
+          sub_issuer_did: options?.sub_issuer_did || null,
         },
       );
 
