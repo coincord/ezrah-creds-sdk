@@ -4,6 +4,8 @@ dotenv.config();
 import { jest } from '@jest/globals';
 import EzrahCredential from '../src/lib';
 import { GraphQLClient } from 'graphql-request';
+import { ed25519 } from '@noble/curves/ed25519';
+import { bytesToHex } from '@noble/curves/utils';
 
 jest.setTimeout(30000);
 
@@ -111,8 +113,12 @@ describe('Credential', () => {
   });
 
   it('Issue an Encrypted Credential', async () => {
-    // const receiverPk = ed25519.utils.randomPrivateKey();
-    // const receiverPuk = ed25519.getPublicKey(receiverPk);
+    const receiverPk = ed25519.utils.randomSecretKey();
+    const receiverPuk = ed25519.getPublicKey(receiverPk);
+
+    // conver both to hex.
+    const receiverPkHex = bytesToHex(receiverPk);
+    const receiverPukhex = bytesToHex(receiverPuk);
 
     const subjectDid = 'did:ezrah:0x32511ABa1630f5526669d57325611A68aA240127';
 
@@ -150,7 +156,8 @@ describe('Credential', () => {
         'emergency_contact_phone',
         'background_check_status',
       ],
-      ['efdedfabd5db14876e28b8a920a63455736e2f2d8a85bee37db9c8381068534b'],
+      [receiverPukhex],
+      // ['efdedfabd5db14876e28b8a920a63455736e2f2d8a85bee37db9c8381068534b'],
       {
         policy_control: true,
       },

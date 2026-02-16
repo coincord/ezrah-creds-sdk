@@ -22,6 +22,15 @@ export const CREATETEMPLATESTRUCTURE = gql`
   }
 `;
 
+export const SUB_ISSUER_MUTATION = gql`
+  mutation SubIssuerCreation($name: String!, $description: String!, $domain: String!) {
+    createSubIssuer(name: $name, description: $description, domain: $domain) {
+      did
+      name
+    }
+  }
+`;
+
 export const CREATECREDENTIALSDK = gql`
   mutation CreateCredentialSDK(
     $title: String!
@@ -178,8 +187,16 @@ export const DELETECREDENTIALWEBHOOK = gql`
 `;
 
 export const CREATE_ENCRYPTED_SDJWT_CREDENTIAL = gql`
-  mutation createEncryptedSdJwtCredential($packedRequest: JSON, $policy_control: Boolean) {
-    createEncryptedSdJwtCredential(packedRequest: $packedRequest, policy_control: $policy_control) {
+  mutation createEncryptedSdJwtCredential(
+    $packedRequest: JSON
+    $policy_control: Boolean
+    $sub_issuer_id: String
+  ) {
+    createEncryptedSdJwtCredential(
+      packedRequest: $packedRequest
+      policy_control: $policy_control
+      sub_issuer_did: $sub_issuer_did
+    ) {
       urn
       _encoded
       credential
