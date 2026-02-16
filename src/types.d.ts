@@ -26,6 +26,12 @@ declare global {
     credential: string;
   }
 
+  interface SubIssuer {
+    did: string;
+    name: string;
+    description: string;
+  }
+
   interface Credentials {
     id: string;
     claims: string;
