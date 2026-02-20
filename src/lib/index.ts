@@ -79,8 +79,8 @@ class EzrahCredential {
         domain: params.domain,
         description: params.description,
       });
-      if (response?.createSubIssuer) {
-        throw new Error('Error occurs while issuing credential');
+      if (!response?.createSubIssuer) {
+        throw new Error('Error occurs while creating sub-issuer');
       }
 
       return response.createSubIssuer as SubIssuer;
@@ -92,11 +92,7 @@ class EzrahCredential {
   async subIssuers(): Promise<SubIssuer[]> {
     try {
       const response: GraphQLResponse = await graphqlClient.request(SUB_ISSUER_LIST);
-      if (response?.sub_issuers) {
-        throw new Error('Error occurs while issuing credential');
-      }
-
-      return response.sub_issuers as SubIssuer[];
+      return (response?.sub_issuers || []) as SubIssuer[];
     } catch (err) {
       throw err;
     }
