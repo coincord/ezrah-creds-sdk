@@ -190,7 +190,7 @@ export const CREATE_ENCRYPTED_SDJWT_CREDENTIAL = gql`
   mutation createEncryptedSdJwtCredential(
     $packedRequest: JSON
     $policy_control: Boolean
-    $sub_issuer_id: String
+    $sub_issuer_did: String
   ) {
     createEncryptedSdJwtCredential(
       packedRequest: $packedRequest

@@ -18,6 +18,7 @@ describe('Credential', () => {
   let webhookID: string;
   // const testlogo = new File(['dummy content'], 'testlogo.png', { type: 'image/png' });
   let verificationModelID: string;
+  let subIssuerDID: string;
 
   let credential_urn: string | null;
   const dateRange = (() => {
@@ -62,6 +63,58 @@ describe('Credential', () => {
     expect(response?.identifier.did).toBeDefined();
     organizationAPIKey = response?.api_key ?? '';
     expect(organizationAPIKey).toBeDefined();
+  });
+
+  it('List Sub-Issuers', async () => {
+    const response = await ezrahCredential.subIssuers();
+
+    expect(Array.isArray(response)).toBe(true);
+    expect(response?.length).toBeGreaterThanOrEqual(0);
+
+    console.log('Sub issuer list', response);
+    if (response && response.length > 0) {
+      expect(response[0].did).toBeDefined();
+      expect(response[0].name).toBeDefined();
+      expect(typeof response[0].did).toBe('string');
+      expect(typeof response[0].name).toBe('string');
+    }
+  });
+
+  it('Create Sub-Issuer', async () => {
+    const params = {
+      name: `Test Sub-Issuer ${Date.now()}`,
+      description: 'Test sub-issuer for SDK testing',
+      domain: 'test-sub-issuer.example.com',
+    };
+
+    const response = await ezrahCredential.createSubIssuer(params);
+
+    console.log(response);
+    expect(response).toBeDefined();
+    expect(response.did).toBeDefined();
+    expect(response.name).toBeDefined();
+    expect(typeof response.did).toBe('string');
+    expect(typeof response.name).toBe('string');
+    expect(response.name).toBe(params.name);
+
+    subIssuerDID = response.did;
+  });
+
+  it('Verify Sub-Issuer in List After Creation', async () => {
+    if (!subIssuerDID) {
+      console.log('Skipping verification test as no sub-issuer was created');
+      return;
+    }
+
+    const response = await ezrahCredential.subIssuers();
+
+    expect(Array.isArray(response)).toBe(true);
+
+    if (response?.length > 0) {
+      const createdSubIssuer = response?.find((subIssuer) => subIssuer.did === subIssuerDID);
+      expect(createdSubIssuer).toBeDefined();
+      expect(createdSubIssuer?.did).toBe(subIssuerDID);
+    }
   });
 
   it.skip('CreatesCredentialTemplate', async () => {
@@ -171,6 +224,45 @@ describe('Credential', () => {
     expect(typeof response?._encoded).toBe('string');
   });
 
+  it('Issue Encrypted Credential with Sub-Issuer', async () => {
+    const receiverPk = ed25519.utils.randomSecretKey();
+    const receiverPuk = ed25519.getPublicKey(receiverPk);
+
+    const receiverPkHex = bytesToHex(receiverPk);
+    const receiverPukhex = bytesToHex(receiverPuk);
+
+    const subjectDid = 'did:ezrah:0x32511ABa1630f5526669d57325611A68aA240127';
+
+    const params = {
+      title: 'Sub-Issuer Employee Credential',
+      template_claim_id: template_claim_id,
+      claims: {
+        issuance_date: new Date().toISOString(),
+        sub: subjectDid,
+        first_name: 'John',
+        last_name: 'SubIssuer',
+        email: 'john.subissuer@example.com',
+        department: 'Sub-Issuer Department',
+      },
+    };
+
+    const response = await ezrahCredential.issueEncryptedSDJWT(
+      params.claims,
+      ['first_name', 'last_name', 'email', 'department'],
+      [receiverPukhex],
+      {
+        policy_control: true,
+        sub_issuer_did: subIssuerDID,
+      },
+    );
+
+    console.log('Encrypoted sub-issuer credential', response);
+
+    expect(response).toBeDefined();
+    expect(typeof response?._encoded).toBe('string');
+    expect(response?.urn).toBeDefined();
+  });
+
   it('Change the state of the credential', async () => {
     console.log('The Credential URN : ', credential_urn);
     const response = await ezrahCredential.policyControlCredential({
@@ -187,7 +279,7 @@ describe('Credential', () => {
     const params: CreateVerificationModel = {
       title: 'Employee Freelancing',
       purpose: 'Freelance Employee',
-      claims_match: `name, age, date_of_birth, jobtype, description`,
+      claims_match: `cred_type="basic_info{first_name, last_name, date_of_birth, gender}:bvn{id_number}"`,
       issuer_match: organizationDID,
       manual_verification: true,
     };
