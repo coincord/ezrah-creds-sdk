@@ -191,6 +191,7 @@ class EzrahCredential {
         callback: params.callback,
         custom_url_scheme: params.custom_url_scheme,
         session_duration: params.session_duration,
+        ...(params.checks ? { checks: params.checks } : {}),
       });
 
       if (!response?.createAuthVerificationModel) {
@@ -232,6 +233,7 @@ class EzrahCredential {
           message: params.message,
           reciever_did: params.reciever_did,
           session_code: params.session_code,
+          ...(params.checks ? { checks: params.checks } : {}),
         },
       );
 
