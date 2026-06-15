@@ -1,6 +1,14 @@
 declare global {
   type PolicyStateEnum = 'REVOKE' | 'SUSPEND' | 'EXPIRY';
 
+  export type OOBChecks = {
+    // Recipient-side instructions — encoded in OOB body, enforced by the wallet (trust model)
+    liveness?: boolean;
+    biometrics?: boolean | { type: 'face' | 'fingerprint' | 'any' };
+    one_time_use?: boolean;
+    auto_approve?: boolean;
+  };
+
   // CREDENTIALS
   interface Identifier {
     id: string;
@@ -133,6 +141,7 @@ declare global {
     custom_url_scheme?: string;
     oob_prefix?: string;
     session_duration: string;
+    checks?: OOBChecks;
   }
 
   interface VerificationModel {
@@ -195,6 +204,7 @@ declare global {
     session_code?: string;
     message: string;
     reciever_did: string;
+    checks?: OOBChecks;
   }
 
   interface CredentialsWebhookResponse {

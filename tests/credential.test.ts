@@ -170,7 +170,7 @@ describe('Credential', () => {
     const receiverPuk = ed25519.getPublicKey(receiverPk);
 
     // conver both to hex.
-    const receiverPkHex = bytesToHex(receiverPk);
+    // const receiverPkHex = bytesToHex(receiverPk);
     const receiverPukhex = bytesToHex(receiverPuk);
 
     const subjectDid = 'did:ezrah:0x32511ABa1630f5526669d57325611A68aA240127';

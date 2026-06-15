@@ -103,6 +103,7 @@ export const CREATEAUTHVERIFICATIONMODEL = gql`
     $oob_prefix: String
     $session_duration: String
     $manual_verification: Boolean
+    $checks: JSON
   ) {
     createAuthVerificationModel(
       title: $title
@@ -116,6 +117,7 @@ export const CREATEAUTHVERIFICATIONMODEL = gql`
       custom_url_scheme: $custom_url_scheme
       oob_prefix: $oob_prefix
       session_duration: $session_duration
+      checks: $checks
     ) {
       id
       title
@@ -138,6 +140,7 @@ export const CREATE_REQUEST_MEDIATOR_MESSAGE = gql`
     $message: String
     $session_code: String
     $reciever_did: String
+    $checks: JSON
   ) {
     createRequestMediatorMessage(
       oob_code: $oob_code
@@ -145,6 +148,7 @@ export const CREATE_REQUEST_MEDIATOR_MESSAGE = gql`
       session_code: $session_code
       message: $message
       reciever_did: $reciever_did
+      checks: $checks
     )
   }
 `;
