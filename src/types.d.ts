@@ -1,14 +1,7 @@
 declare global {
   type PolicyStateEnum = 'REVOKE' | 'SUSPEND' | 'EXPIRY';
 
-  export type OOBChecks = {
-    // Recipient-side instructions — encoded in OOB body, enforced by the wallet (trust model)
-    liveness?: boolean;
-    biometrics?: boolean | { type: 'face' | 'fingerprint' | 'any' };
-    one_time_use?: boolean;
-    auto_approve?: boolean;
-  };
-
+  export type OOBChecks = Record<string, unknown>;
   // CREDENTIALS
   interface Identifier {
     id: string;
